@@ -1,0 +1,45 @@
+<?php
+
+class swpMVCBaseModel extends ActiveRecord\Model
+{
+    public function render(Stamp $tpl)
+    {
+        $output = $tpl;
+        foreach($this->attributes() as $key => $val)
+        {
+            $render_method = 'render_'.$key;
+            $value = (is_callable(array($this, $render_method))) ? $this->$render_method : $val;
+            $output = $output->replace($key, $value);
+        }
+        $class = get_called_class();
+        if (!is_callable(array($class, 'controls'))) return $output;
+        $controls = $class::controls();
+        foreach($controls as $prop => $control)
+        {
+            if (!$this->validate_control($prop, $control)) continue;
+            $output = $output->replace('control_label_'.$prop, swFormHelper::$control['type']($control, $this->$prop));
+            $output = $output->replace('control_'.$prop, swFormHelper::$control['type']($control, $this->$prop));
+        }
+        return $output;
+    }
+    
+    private function validate_control($prop, $control)
+    {
+        $class = get_called_class();
+        $keys = array('type');
+        foreach($keys as $k)
+            if (!isset($control[$k]))
+            {
+                $this->logError("Model $class missing  $k property in control definition for $prop.");
+                return false;
+            }
+        return true;
+    }
+    
+    public function logError($msg)
+    {
+        trigger_error($msg, E_USER_WARNING);
+        Console::error($msg);
+        return true;
+    }
+}
