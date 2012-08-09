@@ -1,11 +1,18 @@
 <?php
 
-class swpMVCBaseController
+class swMVCBaseController
 {
+    public $page_title = "";
 
     public function __construct()
     {
+            add_filter( 'wp_title', array($this, 'set_page_title') );
+    }
     
+    public function set_page_title($title)
+    {
+    	if(trim($this->page_title) !== '') return $this->page_title;
+    	return $title;
     }
     
     public function template($name)
