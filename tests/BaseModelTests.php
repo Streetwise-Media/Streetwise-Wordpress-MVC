@@ -117,6 +117,14 @@ class BaseModelTests extends \Enhance\TestFixture
         }
     }
     
+    public function test_reduce_to_build_output()
+    {
+        return;
+        $words = array('this ', 'is ', 'the ', 'string ');
+        $out = _::reduce($words, function($memo, $str) { return $memo.$str; }, '');
+        $this->utility->dump($out);
+    }
+    
 }
 
 

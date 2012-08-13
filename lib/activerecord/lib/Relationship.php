@@ -132,7 +132,7 @@ abstract class AbstractRelationship implements InterfaceRelationship
 		$options = $this->options;
 		$inflector = Inflector::instance();
 		$query_key = $query_keys[0];
-		$model_values_key = ($this->options['primary_key']) ? $this->options['primary_key'] : $model_values_keys[0];
+		$model_values_key = (isset($this->options['primary_key'])) ? $this->options['primary_key'] : $model_values_keys[0];
 
 		foreach ($attributes as $column => $value)
 			$values[] = $value[$inflector->variablize($model_values_key)];
@@ -178,9 +178,9 @@ abstract class AbstractRelationship implements InterfaceRelationship
 		$options = $this->unset_non_finder_options($options);
 
 		$class = $this->class_name;
-		Utils::add_condition($options['conditions'], $this->options['conditions']);
-		$options['limit'] = $this->options['limit'];
-		$options['order'] = $this->options['order'];
+		if (isset($this->options['conditions'])) Utils::add_condition($options['conditions'], $this->options['conditions']);
+		if (isset($this->options['limit'])) $options['limit'] = $this->options['limit'];
+		if (isset($this->options['order'])) $options['order'] = $this->options['order'];
 
 		$related_models = $class::find('all', $options);
 		$used_models = array();

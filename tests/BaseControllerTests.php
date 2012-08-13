@@ -70,13 +70,13 @@ class BaseControlllerTests extends \Enhance\TestFixture
         );
         add_filter('swp_mvc_routes', array($this->cu, 'add_routes'));
         $this->c->router->register_routes();
-        $link = $this->bc->link('test', 'index', array('two', 'three'));
+        $link = swpMVCBaseController::link('test', 'index', array('two', 'three'));
         $expect = get_bloginfo('url').'/one/two/three';
         \Enhance\Assert::areIdentical($expect, $link);
-        $link = $this->bc->link('test', 'index');
+        $link = swpMVCBaseController::link('test', 'index');
         $expect = get_bloginfo('url').'/one/';
         \Enhance\Assert::areIdentical($expect, $link);
-        $link = $this->bc->link('woop', 'woop', array('one'));
+        $link = swpMVCBaseController::link('woop', 'woop', array('one'));
         $expect = get_bloginfo('url').'/two/one';
         \Enhance\Assert::areIdentical($expect, $link);
     }
