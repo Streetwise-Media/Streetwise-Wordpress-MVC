@@ -2,24 +2,23 @@
 
 class swpMVCBaseModel extends ActiveRecord\Model
 {
+    public function &read_attribute($attr)
+    {
+        $value = parent::read_attribute($attr);
+        if (is_string($value)) $value = stripslashes($value);
+        return $value;
+    }
+    
+    
     public function render(Stamp $tpl)
     {
         $output = $tpl;
         foreach($this->attributes() as $key => $val)
         {
             $render_method = 'render_'.$key;
-            $value = (is_callable(array($this, $render_method))) ? $this->$render_method() : $val;
+            $value = (is_callable(array($this, $render_method))) ? $this->$render_method : $val;
             $output = $output->replace($key, $value);
         }
-        if (method_exists($this, 'renderers') and is_callable(array($this, 'renderers')) and is_array($this->renderers()))
-            foreach($this->renderers() as $key => $func_array)
-            {
-                if (!is_array($func_array) or count($func_array) < 2 or
-                        !method_exists($this, $func_array[0]) or !is_callable(array($this, $func_array[0])) or
-                            !is_array($func_array[1])) continue;
-                $r = call_user_func_array(array($this, $func_array[0]), $func_array[1]);
-                $output = $output->replace($key, $r);
-            }
         $class = get_called_class();
         if (!is_callable(array($class, 'controls'))) return $output;
         $controls = $class::controls();

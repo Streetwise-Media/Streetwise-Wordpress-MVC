@@ -29,7 +29,7 @@ class swpMVCProfiler
 	{
 		add_action('init',array($this,'init'));
 		add_action('wp_enqueue_scripts', array($this, 'scripts'));
-		add_action('shutdown', array($this, 'end'));
+		add_action('wp_footer', array($this, 'end'));
 	}
 	
 	function scripts()

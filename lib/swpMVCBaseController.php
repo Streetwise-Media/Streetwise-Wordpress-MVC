@@ -1,12 +1,13 @@
 <?php
 
-class swMVCBaseController
+class swpMVCBaseController
 {
+    
     public $page_title = "";
 
     public function __construct()
     {
-            add_filter( 'wp_title', array($this, 'set_page_title') );
+        add_filter( 'wp_title', array($this, 'set_page_title') );
     }
     
     public function set_page_title($title)
@@ -54,6 +55,35 @@ class swMVCBaseController
         $wp_query->set_404();
         require TEMPLATEPATH.'/404.php';
         exit;
+    }
+    
+    public function force_login($modal_title=false)
+    {
+        global $blog_id;
+        $template_url = get_bloginfo('template_url');
+        $your_co_url = get_bloginfo('template_url')."/css/".$blog_id."/images/your-co.png";
+        $modal_title = ($modal_title) ? $modal_title : 'Please Login';
+        get_header();
+        echo $this->template('job-creation')->copy('careers_header')->replace('template_url', $template_url)
+            ->replace('your_co_url', $your_co_url);
+        echo '
+            <script id="binno_process_channel_invite_script" type="text/javascript">
+            head.ready(function() {
+                jQuery("document").ready(function($){
+                    $("#binno_login_now").val("Log In");
+                    $("#binno_login_now").removeAttr("disabled");
+                    $("#binno_signup_now").val("Signup");
+                    $("#binno_signup_now").removeAttr("disabled");
+                    $(".binno_modal_header_caption").text("'.$modal_title.'");
+                    $("#x_button").remove();
+                    $("#binno_modal").css("height", "170px").css("width", "400px");
+                    $("#binno_modal_inner").css("height", "140px").css("width", "400px" );
+                    $(".binno_modal_footer_links").html(\'<span id="binno_manual_login_reg" class="binno_gigya_link">Manual login</span> | <span id="binno_manual_registration_link" class="binno_gigya_link">Signup</span>\');
+                    });
+                });
+            </script>';
+        get_footer();
+
     }
     
     public function link($controller, $method, $params=array())

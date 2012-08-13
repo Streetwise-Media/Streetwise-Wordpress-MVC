@@ -90,6 +90,7 @@ class MySqlDatabase {
 	{
 		foreach($values as $value) $sql = preg_replace('/\?/', $value, $sql, 1);
 		$this->query($sql);
+		if (SW_LOG_QUERIES === true) trigger_error($sql, E_USER_WARNING);
 	}
 	
 	function fetch_array($sql) {
