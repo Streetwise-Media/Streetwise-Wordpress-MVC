@@ -52,7 +52,6 @@ class CoreTests extends \Enhance\TestFixture
         \Enhance\Assert::isTrue(class_exists('ActiveRecord\Model'));
         \Enhance\Assert::isTrue(class_exists('swpMVCBaseController'));
         \Enhance\Assert::isTrue(class_exists('swpMVCBaseValidator'));
-        \Enhance\Assert::isTrue(class_exists('swpMVCQueryWriter'));
     }
     
 }
