@@ -16,11 +16,21 @@ class swpMVCBaseModel extends ActiveRecord\Model
         foreach($this->attributes() as $key => $val)
         {
             $render_method = 'render_'.$key;
-            $value = (is_callable(array($this, $render_method))) ? $this->$render_method : $val;
-            $output = $output->replace($key, $value);
+            $value = (method_exists($this, $render_method) and is_callable(array($this, $render_method)))
+                ? $this->$render_method() : $val;
+            $output = $output->replace($key, trim($value));
         }
+        if (method_exists($this, 'renderers') and is_callable(array($this, 'renderers')) and is_array($this->renderers()))
+            foreach($this->renderers() as $key => $func_array)
+            {
+                if (!is_array($func_array) or count($func_array) < 2 or
+                        !method_exists($this, $func_array[0]) or !is_callable(array($this, $func_array[0])) or
+                            !is_array($func_array[1])) continue;
+                $r = call_user_func_array(array($this, $func_array[0]), $func_array[1]);
+                $output = $output->replace($key, $r);
+            }
         $class = get_called_class();
-        if (!is_callable(array($class, 'controls'))) return $output;
+        if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
         $controls = $class::controls();
         foreach($controls as $prop => $control)
         {
