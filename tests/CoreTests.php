@@ -40,7 +40,11 @@ class CoreTests extends \Enhance\TestFixture
         $this->c->router->register_routes();
         $routes = $this->c->router->get_registered_routes();
         $expects = array ( '^one/([^/]+)/([^/]+)/?$' => '/index.php?swpmvc_controller=test&swpmvc_method=index&swpmvc_params[]=$matches[1]&swpmvc_params[]=$matches[2]', );
-        \Enhance\Assert::areIdentical($expects, $routes);
+        foreach($expects as $k => $v)
+        {
+            \Enhance\Assert::isTrue(array_key_exists($k, $routes));
+            \Enhance\Assert::areIdentical($v, $routes[$k]);
+        }
     }
     
     public function test_plugin_loads_library_classes()
