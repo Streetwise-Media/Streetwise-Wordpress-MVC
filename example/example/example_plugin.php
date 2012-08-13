@@ -62,10 +62,10 @@ class swpMVC_Example
             $a['route'] = $route;
             $r[] = $a;
         }
-        $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'show_post',
-                        'route' => '/swpmvc/post/:p');
-        $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'post_author',
-                     'route' => '/swpmvc/post/:p/author');
+        $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'wp_style',
+                        'route' => '/recent_thumbs/wp_style');
+        $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'swpmvc_style',
+                        'route' => '/recent_thumbs/swpmvc_style');
         $s =  array_merge($routes, $r);
         return $s;
     }
