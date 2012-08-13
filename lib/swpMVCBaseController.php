@@ -86,7 +86,7 @@ class swpMVCBaseController
 
     }
     
-    public function link($controller, $method, $params=array())
+    public static function link($controller, $method, $params=array())
     {
         $routes = swpMVCCore::instance()->router->routes;
         $matched_route = _::find($routes, function($route) use ($controller, $method, $params) {
