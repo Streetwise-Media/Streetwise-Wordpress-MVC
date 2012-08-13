@@ -1546,7 +1546,8 @@ class Model
                             $args[1]['conditions'] = self::merge_model_conditions($args[1]['conditions']);
                     if (method_exists($class, 'joins') and
                     is_callable(array($class, 'joins')))
-                    $args[1]['joins'] = $class::joins().$args[1]['joins'];
+                    $args[1]['joins'] = (isset($args[1]['joins'])) ?
+                        $class::joins().$args[1]['joins'] : $class::joins();
                 }
 		$options = static::extract_and_validate_options($args);
 		$num_args = count($args);

@@ -1,12 +1,13 @@
 <?php
 
-class swMVCBaseController
+class swpMVCBaseController
 {
+    
     public $page_title = "";
 
     public function __construct()
     {
-            add_filter( 'wp_title', array($this, 'set_page_title') );
+        add_filter( 'wp_title', array($this, 'set_page_title') );
     }
     
     public function set_page_title($title)
@@ -56,7 +57,7 @@ class swMVCBaseController
         exit;
     }
     
-    public function link($controller, $method, $params=array())
+    public static function link($controller, $method, $params=array())
     {
         $routes = swpMVCCore::instance()->router->routes;
         $matched_route = _::find($routes, function($route) use ($controller, $method, $params) {
