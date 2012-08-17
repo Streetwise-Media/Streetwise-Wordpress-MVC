@@ -20,14 +20,14 @@ class swFormHelper
         $type = (isset($control['input_type'])) ? $control['input_type'] : 'text';
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
         return "<input class='{$this->_prefix} {$this->_prefix}_$key'
-            name='$nid' id='$nid' type='$type' value='$value' />";
+            name='{$this->_prefix}[$key]' id='$nid' type='$type' value='$value' />";
     }
     
     public function select($key, $control, $value=false)
     {
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
         $select = "<select class='{$this->_prefix} {$this->_prefix}_$key'
-            name='$nid' id='$nid'>";
+            name='{$this->_prefix}[$key]' id='$nid'>";
         foreach($control['options'] as $text => $val)
         {
             $selected = ($val === $value) ? "selected='selected'" : '';
@@ -41,6 +41,6 @@ class swFormHelper
     {
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
         return "<textarea class='{$this->_prefix} {$this->_prefix}_$key' id='$nid'
-            name='$nid'>$value</textarea>";
+            name='{$this->_prefix}[$key]'>$value</textarea>";
     }
 }
