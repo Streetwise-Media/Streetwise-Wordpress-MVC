@@ -109,24 +109,8 @@ class User extends swpMVCBaseModel
     static $has_many = array(
         array('posts', 'foreign_key' => 'post_author', 'limit' => 10, 'conditions' => array('post_status = ?', 'publish')),
         array('comments', 'foreign_key' => 'user_id', 'limit' => 10),
-        array('usermeta', 'class' => 'UserMeta', 'foreign_key' => 'user_id'),
+        array('meta', 'class' => 'UserMeta', 'foreign_key' => 'user_id'),
     );
-    
-    private function load_meta()
-    {
-        if (is_array($this->_usermeta)) return $this->_usermeta;
-        $meta = array();
-        _::each($this->usermeta, function($um) use (&$meta) { $meta[$um->meta_key] = $um->meta_value; });
-        $this->_usermeta = $meta;
-        return $this->_usermeta;
-    }
-    
-    public function meta($key=false)
-    {
-        if (!$key) return $this->load_meta();
-        $meta = $this->load_meta();
-        return $meta[$key];
-    }
 }
 
 class UserMeta extends swpMVCBaseModel

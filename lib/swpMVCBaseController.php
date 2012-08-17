@@ -4,10 +4,17 @@ class swpMVCBaseController
 {
     
     public $page_title = "";
+    public $_templatedir;
+    public $_scripts;
+    public $_script_localizations;
+    public $_styles;
 
     public function __construct()
     {
         add_filter( 'wp_title', array($this, 'set_page_title') );
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'localize_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
     }
     
     public function set_page_title($title)
@@ -67,7 +74,7 @@ class swpMVCBaseController
         });
         $error_msg = 'Could not find route matching '.json_encode(
                             array('controller' => $controller, 'method' => $method, 'params' => $params));
-        if (!is_array($matched_route) and !isset($matched_route['route'])) return $this->logError($error_msg);
+        if (!is_array($matched_route) and !isset($matched_route['route'])) return self::logError($error_msg);
         $r = $matched_route['route'];
         foreach($params as $p) $r = preg_replace('/:p/', $p, $r, 1);
         return get_bloginfo('url').$r;

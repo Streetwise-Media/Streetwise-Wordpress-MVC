@@ -2,6 +2,8 @@
 
 class swpMVCBaseModel extends ActiveRecord\Model
 {
+    private $_meta;
+    
     public function &read_attribute($attr)
     {
         $value = parent::read_attribute($attr);
@@ -39,6 +41,38 @@ class swpMVCBaseModel extends ActiveRecord\Model
             $output = $output->replace('control_'.$prop, swFormHelper::$control['type']($control, $this->$prop));
         }
         return $output;
+    }
+    
+    public function hydrate()
+    {
+        return false;
+    }
+    
+    public function load_meta()
+    {  
+        if (is_array($this->_meta)) return $this->_meta;
+        $class = get_called_class();
+        if (!property_exists($class, 'has_many')
+                or (!_::find($class::$has_many, function($a) { return $a[0] === 'meta'; })))
+                    return $this->_meta = array();
+        $meta = array();
+        $self = $this;
+        _::each($this->meta, function($m) use (&$meta, $self) {
+            $value = (false !== $hydrated_value = $self->hydrate($m->meta_key, $m->meta_value)) ? $hydrated_value : $m->meta_value;
+            if (isset($meta[$m->meta_key]) and is_array($meta[$m->meta_key])) return $meta[$m->meta_key] = $value;
+            if (!isset($meta[$m->meta_key])) return $meta[$m->meta_key] = $value;
+            return $meta[$m->meta_key] = array($meta[$m->meta_key], $value);
+        });
+        $this->_meta = $meta;
+        return $this->_meta;
+    }
+    
+    public function meta($key=false, $raw=false)
+    {
+        if ($key and $raw) return _::find($this->meta, function($m) use ($key) { return $m->meta_key === $key; });
+        if (!$key) return $this->load_meta();
+        $meta = $this->load_meta();
+        return $meta[$key];
     }
     
     private function validate_control($prop, $control)
