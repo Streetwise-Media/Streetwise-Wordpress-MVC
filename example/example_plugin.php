@@ -66,6 +66,8 @@ class swpMVC_Example
                         'route' => '/recent_thumbs/wp_style');
         $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'swpmvc_style',
                         'route' => '/recent_thumbs/swpmvc_style');
+        $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'render_post_form',
+                        'route' => '/post_form/:p');
         $s =  array_merge($routes, $r);
         return $s;
     }

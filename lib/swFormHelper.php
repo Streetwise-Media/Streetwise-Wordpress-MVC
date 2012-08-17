@@ -2,23 +2,45 @@
 
 class swFormHelper
 {
-    public static function label($control)
+    public $_prefix;
+    
+    public function __construct($prefix='')
     {
-        
+        $this->_prefix = $prefix;
     }
     
-    public static function input($control, $value=false)
+    public function label($key, $control)
     {
-    
+        return "<label class='{$this->_prefix} {$this->_prefix}_$key'
+            for='{$this->_prefix}_{$key}_{$control['type']}'>{$control['label']}</label>";
     }
     
-    public static function select($control, $value=false)
+    public function input($key, $control, $value=false)
     {
-    
+        $type = (isset($control['input_type'])) ? $control['input_type'] : 'text';
+        $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
+        return "<input class='{$this->_prefix} {$this->_prefix}_$key'
+            name='$nid' id='$nid' type='$type' value='$value' />";
     }
     
-    public static function textarea($control, $value=false)
+    public function select($key, $control, $value=false)
     {
-        
+        $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
+        $select = "<select class='{$this->_prefix} {$this->_prefix}_$key'
+            name='$nid' id='$nid'>";
+        foreach($control['options'] as $text => $val)
+        {
+            $selected = ($val === $value) ? "selected='selected'" : '';
+            $select .= "<option value='$val' $selected>$text</option>";
+        }
+        $select .= "</option>";
+        return $select;
+    }
+    
+    public function textarea($key, $control, $value=false)
+    {
+        $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
+        return "<textarea class='{$this->_prefix} {$this->_prefix}_$key' id='$nid'
+            name='$nid'>$value</textarea>";
     }
 }

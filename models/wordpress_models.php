@@ -63,6 +63,14 @@ class Post extends swpMVCBaseModel
         return _::map($cat_terms, function($term) { return $term->termtaxonomy->term; });
     }
     
+    public static function controls()
+    {
+        return array(
+            'post_title' => array('type' => 'input', 'label' => 'Title'),
+            'post_content' => array('type' => 'textarea', 'label' => 'Content')
+        );
+    }
+    
 }
 
 class Comment extends swpMVCBaseModel

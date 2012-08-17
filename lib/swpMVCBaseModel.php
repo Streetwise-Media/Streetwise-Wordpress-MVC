@@ -3,6 +3,7 @@
 class swpMVCBaseModel extends ActiveRecord\Model
 {
     private $_meta;
+    private $_form_helper;
     
     public function &read_attribute($attr)
     {
@@ -11,6 +12,12 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $value;
     }
     
+    public function form_helper()
+    {
+        if (!isset($this->form_helper) or !is_object($this->form_helper))
+            $this->form_helper = new swFormHelper();
+        return $this->_form_helper;
+    }
     
     public function render(Stamp $tpl)
     {
@@ -34,14 +41,55 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $class = get_called_class();
         if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
         $controls = $class::controls();
+        if (!isset($this->_form_helper) or !is_object($this->_form_helper))
+            $this->_form_helper = new swFormHelper($class);
         foreach($controls as $prop => $control)
         {
-            if (!$this->validate_control($prop, $control)) continue;
-            $output = $output->replace('control_label_'.$prop, swFormHelper::$control['type']($control, $this->$prop));
-            $output = $output->replace('control_'.$prop, swFormHelper::$control['type']($control, $this->$prop));
+            if (!$class::validate_control($prop, $control)) continue;
+            if (isset($control['label']))
+                $output = $output->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control, $this->$prop));
+            $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $this->$prop));
         }
         return $output;
     }
+    
+    public static function renderForm(Stamp $output, $prefix = false)
+    {
+        $class = get_called_class();
+        $p = $prefix or $class;
+        if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
+        $controls = $class::controls();
+        $form_helper = new swFormHelper($p);
+        foreach($controls as $prop => $control)
+        {
+            if (!$class::validate_control($prop, $control)) continue;
+            if (isset($control['label']))
+                $output = $output->replace('control_label_'.$prop, $form_helper->label($prop, $control));
+            $output = $output->replace('control_'.$prop, $form_helper->$control['type']($prop, $control));
+        }
+        return $output;
+    }
+    
+    private static function validate_control($prop, $control)
+    {
+        $class = get_called_class();
+        $keys = array('type');
+        foreach($keys as $k)
+        {
+            if (!isset($control[$k]))
+            {
+                $class::logError("Model $class missing  $k property in control definition for $prop.");
+                return false;
+            }
+            if ($control['type'] === 'select' and (!isset($control['options']) or !is_array($control['options'])))
+            {
+                $class::logError("Model $class declared select control for property $k without defining control options array.");
+                return false;
+            }
+        }
+        return true;
+    }
+    
     
     public function hydrate()
     {
@@ -74,20 +122,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $meta = $this->load_meta();
         return $meta[$key];
     }
-    
-    private function validate_control($prop, $control)
-    {
-        $class = get_called_class();
-        $keys = array('type');
-        foreach($keys as $k)
-            if (!isset($control[$k]))
-            {
-                $this->logError("Model $class missing  $k property in control definition for $prop.");
-                return false;
-            }
-        return true;
-    }
-    
+
     public function logError($msg)
     {
         trigger_error($msg, E_USER_WARNING);

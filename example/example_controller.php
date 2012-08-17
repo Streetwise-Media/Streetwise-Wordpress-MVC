@@ -27,6 +27,17 @@ class swpMVC_Example_Controller extends swpMVCBaseController
         get_footer();
     }
     
+    public function render_post_form($slug=false)
+    {
+        if (!$slug) return $this->set404();
+        $post = Post::first(array('conditions' => array('post_name = ?', $slug)));
+        if (!$post) return $this->set404();
+        get_header();
+        echo $post->render($this->template('post_form'));
+        echo Post::renderForm($this->template('post_form'), 'new_post');
+        get_footer();
+    }
+    
     public function wp_style()
     {
         get_header();
