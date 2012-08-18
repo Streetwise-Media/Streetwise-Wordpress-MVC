@@ -212,8 +212,8 @@ with no arguments.
 ###public static function controls
 
 This method allows you to define form controls that should be used to interact with model properties, which will then be used by
-the [render](#models/model-render) method to populate any Stamp tags of the format control_{{property name}} and additionally
-control_label_{{property name}} if the label attribute is defined for the control definition in the return value. The structure for the
+the [render](#models/model-render) method to populate any Stamp tags of the format control\_{{property name}} and additionally
+control\_label\_{{property name}} if the label attribute is defined for the control definition in the return value. The structure for the
 return value on this method is again an associative array of arrays which follow the structure below:
 
     <?php
@@ -230,7 +230,7 @@ The following must be true of any element in the controls array for it to be val
 *   The key must match the model property that the control corresponds to.
 *   Type must be either input, select, or textarea
 *   input_type is optional and only applies when type is set to input. Default is text.
-*   label is optional. control_label_{{property name}} tags will not be replaced if no label property is defined
+*   label is optional. control\_label\_{{property name}} tags will not be replaced if no label property is defined
 *   If type is select, an additional element is required with key 'options', value is an associative array of
     options for the dropdown, where key is the text for the option, and value is the value when that option is selected.
 
