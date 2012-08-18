@@ -59,7 +59,7 @@ you want, with no additional steps required to turn off magic routes.
 Parameters in your route are represented with the token ":p"
 
 The will be passed to your controller method in the order they are declared. Skipping named parameters allows the
-framework to use (only one additional querystring variable)[http://codex.wordpress.org/Rewrite_API/add_rewrite_tag]
+framework to use [only one additional querystring variable](http://codex.wordpress.org/Rewrite_API/add_rewrite_tag)
 
 ### Auto-flush rewrite rules
 
@@ -92,9 +92,9 @@ directory
 ##Models
 
 Models must extend the swpMVCBaseModel class. This class itself extends ActiveRecord\Model, from the
-(PHP ActiveRecord library)[http://phpactiverecord.org]. For query syntax, CRUD operations, basic model definitions, and
-overloading, refer to the ActiveRecord docs. The copy included in swpMVC (includes several modifications to make it more
-WordPress friendly, (it's backwards, sorry))[https://github.com/beezee/php-activerecord/compare/master...original], and the swpMVCBaseModel class includes several convenience methods, all of which are covered in this
+[PHP ActiveRecord library](http://phpactiverecord.org). For query syntax, CRUD operations, basic model definitions, and
+overloading, refer to the ActiveRecord docs. The copy included in swpMVC [includes several modifications to make it more WordPress friendly, (the diff is backwards, sorry)](https://github.com/beezee/php-activerecord/compare/master...original)
+, and the swpMVCBaseModel class includes several convenience methods, all of which are covered in this
 section.
 
 ###public static function tablename
@@ -160,7 +160,7 @@ filter results to include only those where the term_taxonomy.taxonomy field has 
 subsets with models is particularly relevant in WordPress, where different "types" of data are frequently lumped
 together in single tables.
 
-One catch to using the joins method, is that calls to the (models finder methods)[http://www.phpactiverecord.org/projects/main/wiki/Finders]
+One catch to using the joins method, is that calls to the [models finder methods](http://www.phpactiverecord.org/projects/main/wiki/Finders)
 will need to use table prefixes for any columns that are present in both the main and joined tables. For this I recommend your
 Model::tablename() methods.
 
