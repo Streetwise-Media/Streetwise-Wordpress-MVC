@@ -12,13 +12,6 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $value;
     }
     
-    public function form_helper()
-    {
-        if (!isset($this->form_helper) or !is_object($this->form_helper))
-            $this->form_helper = new swFormHelper();
-        return $this->_form_helper;
-    }
-    
     public function render(Stamp $tpl)
     {
         $output = $tpl;
@@ -68,6 +61,13 @@ class swpMVCBaseModel extends ActiveRecord\Model
             $output = $output->replace('control_'.$prop, $form_helper->$control['type']($prop, $control));
         }
         return $output;
+    }
+    
+    public function form_helper()
+    {
+        if (!isset($this->form_helper) or !is_object($this->form_helper))
+            $this->form_helper = new swFormHelper();
+        return $this->_form_helper;
     }
     
     private static function validate_control($prop, $control)
