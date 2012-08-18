@@ -181,6 +181,55 @@ These methods act as overrides for your properties when called by the render met
 passed to the render method contains a tag called post_name, and your Post model has a method called render_post_name,
 the return value of that method will be used to populate the Stamp object in favor of the value of the instance property
 post_name.
+
+###public function renderers
+
+This method allows you to define additional renderers (not limited to model properties) that the model should be able to handle.
+It must return an array where the keys are the Stamp tags to be replaced, and the value is an array where the first element is
+the name of an instance method on the model which will return the value to be used in view population, and the second element
+is an array of arguments, (an empty array if no arguments to be passed.)
+
+For example:
+
+    <?php
+    
+        public function renderers()
+        {
+            return array(
+                'additional_render_tag' => array('additional_render_method', array())
+            );
+        }
+        
+This would replace a Stamp tag labeled 'additional_render_tag' with the result of calling $model->additional_render_method()
+with no arguments.
+
+###public static function controls
+
+This method allows you to define form controls that should be used to interact with model properties, which will then be used by
+the [render](#model-render) method to populate any Stamp tags of the format control_{{property name}} and additionally
+control_label_{{property name}} if the label attribute is defined for the control definition in the return value. The structure for the
+return value on this method is again an associative array of arrays which follow the structure below:
+
+    <?php
+    
+        public function controls
+        {
+            return array(
+                'property_name' => array('type' => 'input', 'label' => 'Property Name', 'input_type' => 'button')
+            );
+        }
+        
+The following must be true of any element in the controls array for it to be valid:
+
+*The key must match the model property that the control corresponds to.
+*Type must be either input, select, or textarea
+*input_type is optional and only applies when type is set to input. Default is text.
+*label is optional. control_label_{{property name}} tags will not be replaced if no label property is defined
+*If type is select, an additional element is required with key 'options', value is an associative array of
+options for the dropdown, where key is the text for the option, and value is the value when that option is selected.
+
+When called by the $model->render() method, the generated controls will have their values set according to the values of the
+model instance on which the render method was invoked, and the form will appear populated.
     
 
 ###A note about "through" relationships
