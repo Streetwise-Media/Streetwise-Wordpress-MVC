@@ -12,6 +12,8 @@ the starter plugin found in the starter_plugin directory.
 
 ##Starter Plugin
 
+***
+
 ###Why a singleton?
 
 I know a singleton is an upgraded global variable, but your plugins need to add WordPress filters and
@@ -38,6 +40,8 @@ rewrite rules. See the next section for syntax.
 
 
 ##Router
+
+***
 
 ### Adding routes
 
@@ -90,6 +94,8 @@ directory
 
 
 ##Models
+
+***
 
 Models must extend the swpMVCBaseModel class. This class itself extends ActiveRecord\Model, from the
 [PHP ActiveRecord library](http://phpactiverecord.org). For query syntax, CRUD operations, basic model definitions, and
@@ -206,7 +212,7 @@ with no arguments.
 ###public static function controls
 
 This method allows you to define form controls that should be used to interact with model properties, which will then be used by
-the [render](#model-render) method to populate any Stamp tags of the format control_{{property name}} and additionally
+the [render](#models/model-render) method to populate any Stamp tags of the format control_{{property name}} and additionally
 control_label_{{property name}} if the label attribute is defined for the control definition in the return value. The structure for the
 return value on this method is again an associative array of arrays which follow the structure below:
 
@@ -221,12 +227,12 @@ return value on this method is again an associative array of arrays which follow
         
 The following must be true of any element in the controls array for it to be valid:
 
-*The key must match the model property that the control corresponds to.
-*Type must be either input, select, or textarea
-*input_type is optional and only applies when type is set to input. Default is text.
-*label is optional. control_label_{{property name}} tags will not be replaced if no label property is defined
-*If type is select, an additional element is required with key 'options', value is an associative array of
-options for the dropdown, where key is the text for the option, and value is the value when that option is selected.
+*   The key must match the model property that the control corresponds to.
+*   Type must be either input, select, or textarea
+*   input_type is optional and only applies when type is set to input. Default is text.
+*   label is optional. control_label_{{property name}} tags will not be replaced if no label property is defined
+*   If type is select, an additional element is required with key 'options', value is an associative array of
+    options for the dropdown, where key is the text for the option, and value is the value when that option is selected.
 
 When called by the $model->render() method, the generated controls will have their values set according to the values of the
 model instance on which the render method was invoked, and the form will appear populated.
@@ -238,7 +244,13 @@ model instance on which the render method was invoked, and the form will appear 
 
 ##Views
 
+***
+
 
 ##Controllers
 
+***
+
 ##Logging
+
+***
