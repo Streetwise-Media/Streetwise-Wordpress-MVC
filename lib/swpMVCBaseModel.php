@@ -91,9 +91,21 @@ class swpMVCBaseModel extends ActiveRecord\Model
     }
     
     
-    public function hydrate()
+    public function hydrate_meta($k, $v)
     {
         return false;
+    }
+    
+    public function dehydrate_meta($k, $v)
+    {
+        return false;
+    }
+    
+    public function set_meta_value($value)
+    {
+        $val = (false !== $dehydrated_value = $this->dehydrate_meta($this->meta_key, $value)) ? $dehydrated_value : $value;
+        $this->assign_attribute('meta_value', $val);
+        $this->flag_dirty('meta_value');
     }
     
     public function load_meta()
@@ -106,7 +118,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $meta = array();
         $self = $this;
         _::each($this->meta, function($m) use (&$meta, $self) {
-            $value = (false !== $hydrated_value = $self->hydrate($m->meta_key, $m->meta_value)) ? $hydrated_value : $m->meta_value;
+            $value = (false !== $hydrated_value = $self->hydrate_meta($m->meta_key, $m->meta_value)) ? $hydrated_value : $m->meta_value;
             if (isset($meta[$m->meta_key]) and is_array($meta[$m->meta_key])) return $meta[$m->meta_key] = $value;
             if (!isset($meta[$m->meta_key])) return $meta[$m->meta_key] = $value;
             return $meta[$m->meta_key] = array($meta[$m->meta_key], $value);

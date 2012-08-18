@@ -258,6 +258,79 @@ An example of a valid select control:
 
 When called by the $model->render() method, the generated controls will have their values set according to the values of the
 model instance on which the render method was invoked, and the form will appear populated.
+
+###Form prefixes
+
+Each model rendering a form adds a prefix to its form elements. By default when invoked via $model->render(), the form prefix
+will be the class name of the model instance invoking the render method. To override this, set the '\_prefix' property on the  model
+instances form helper before calling render, as follows:
+
+    <?php
+        
+        $model->form_helper()->_prefix = 'my_custom_form_prefix';
+        $model->render($this->template('template_name'));
+        
+###Model::renderForm()
+
+This method can be called statically on a model class to render an empty form for the class properties. The method accepts
+two parameters. The first parameter is required and must be a valid Stamp view object to be populated, the second is an optional
+form prefix (defaults to the class name.)
+
+##Model meta
+
+***
+
+the swpMVCBaseModel class includes some methods for working with meta, a popular WordPress data structure. Any table with
+columns foreign_key, meta_key, meta_value will work with these methods, once you've defined a
+[$has_many relationship](http://www.phpactiverecord.org/projects/main/wiki/Associations) to a model with the name meta.
+
+###$model->meta()
+
+This method will return an empty array if there is no $has_many [relationship](http://www.phpactiverecord.org/projects/main/wiki/Associations)
+named meta defined for the model on which it is called.
+
+If the meta relationship is defined, it must point to a meta table with columns meta_key and meta_value. By calling $model->meta()
+under when these circumstances are met, the return value will be an associative array where keys are equal to meta_key, and
+values are equal to the meta_value. In the case of duplicate meta_key rows for one model instance, the meta_value will be an
+indexed array of all values found.
+
+It is recommended to [eager load](http://www.phpactiverecord.org/projects/main/wiki/Finders#eager-loading) the meta when
+querying for your models if you intend to use this method, to avoid the
+[n+1 query problem](http://www.phabricator.com/docs/phabricator/article/Performance_N+1_Query_Problem.html)
+
+###public function hydrate_meta
+
+When working with ActiveRecord Models, WordPress will not serialize and unserialize data automatically for you. This method
+accepts two parameters, meta_key and meta_value, and gives you the opportunity to modify meta values as necessary when
+retreiving them using the $model->meta() method. (This does not apply when the $raw parameter is passed as true.)
+
+Here's an example that will unserialize meta when the key is equal to 'serialized_meta':
+
+    <?php
+        
+        public function hydrate_meta($meta_key, $meta_value)
+        {
+            return ($meta_key === 'serialized_meta') unserialize($meta_value) : $meta_value;
+        }
+        
+###public function dehydrate_meta
+
+This method serves the opposite purpose of hydrate_meta, and will be invoked on any values assigned to the 'meta_value' property
+of a meta object. For a class with dehydrate_meta defined as follows:
+
+    <?php
+    
+        public function dehydrate_meta($meta_key, $meta_value)
+        {
+            return ($meta_key === 'serialized_meta') serialize($meta_value) : $meta_value;
+        }
+        
+Calling the below on a model instance of the class would make the following boolean statment true:
+
+    <?php
+    
+        $model->meta_value = array('one', 'two', 'three');
+        $model->meta_value === 'a:3:{i:0;s:3:"one";i:1;s:3:"two";i:2;s:5:"three";}';
     
 
 ###A note about "through" relationships
