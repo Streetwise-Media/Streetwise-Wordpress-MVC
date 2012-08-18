@@ -237,6 +237,24 @@ The following must be true of any element in the controls array for it to be val
 *   label is optional. control\_label\_{{property name}} tags will not be replaced if no label property is defined
 *   If type is select, an additional element is required with key 'options'. The value of this element must be an associative array of
     options for the dropdown, where key is the text for the option, and value is the value when that option is selected.
+    
+An example of a valid select control:
+
+    <?php
+    
+        public function controls
+        {
+            return array(
+                'property_name' => array(
+                        'type' => 'select',
+                        'label' => 'Property Name',
+                        'options' => array(
+                            'Option 1 Text' => 'option_1_value',
+                            'Option 2 Text' => 'option_2_value'
+                        )
+                    )
+            );
+        }
 
 When called by the $model->render() method, the generated controls will have their values set according to the values of the
 model instance on which the render method was invoked, and the form will appear populated.
