@@ -178,8 +178,8 @@ and access the properties from the resulting array.
 
 ###$model->render()
 
-swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp view object (see Views section
-for details,) and autopopulates the Stamp using the model properties.
+swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp view object (see [Views](#views)
+section for details,) and autopopulates the Stamp using the model properties.
 
 ###public function render_{{property_name}}
 
