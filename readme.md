@@ -276,6 +276,44 @@ This method can be called statically on a model class to render an empty form fo
 two parameters. The first parameter is required and must be a valid Stamp view object to be populated, the second is an optional
 form prefix (defaults to the class name.)
 
+###A note about "through" relationships
+
+Personally I've not had much success declaring [through relationships](http://www.phpactiverecord.org/projects/main/wiki/Associations#has_many_through)
+with my activerecord models, so I have stuck to nesting includes during my finder calls manually. While the through relationship
+does improve efficiency, I've decided it's not worth the trouble, as even without the generated joins you can typically get all
+the data you will need for less than 10 queries with simple nested eager loading. Here's an example of getting 10 posts with their
+related post tag and category data using simple nested eager loading:
+
+    <?php
+        
+        $posts = Post::all(array('limit' => 10,
+                'include' => array('postterms' =>
+                    array('termtaxonomy' =>
+                        array('term')
+                    )
+                )
+            )
+        );
+        
+If you do have some success modeling with the through relationships, please reach out via Github issues and I'll be happy to update
+the docs, repo as needed.
+
+###Included models
+
+####Post
+
+####TermRelationship
+
+####TermTaxonomy
+
+####Term
+
+####Comment
+
+####User
+
+####UserMeta
+
 ##Model meta
 
 ***
@@ -333,11 +371,6 @@ Calling the below on a model instance of the class would make the following bool
     
         $model->meta_value = array('one', 'two', 'three');
         $model->meta_value === 'a:3:{i:0;s:3:"one";i:1;s:3:"two";i:2;s:5:"three";}';
-    
-
-###A note about "through" relationships
-
-###Included models
 
 ##Views
 
