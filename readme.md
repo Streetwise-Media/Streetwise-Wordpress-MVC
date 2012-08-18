@@ -221,7 +221,11 @@ return value on this method is again an associative array of arrays which follow
         public function controls
         {
             return array(
-                'property_name' => array('type' => 'input', 'label' => 'Property Name', 'input_type' => 'button')
+                'property_name' => array(
+                        'type' => 'input',
+                        'label' => 'Property Name',
+                        'input_type' => 'button'
+                    )
             );
         }
         
