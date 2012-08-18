@@ -235,7 +235,7 @@ The following must be true of any element in the controls array for it to be val
 *   Type must be either input, select, or textarea
 *   input_type is optional and only applies when type is set to input. Default is text.
 *   label is optional. control\_label\_{{property name}} tags will not be replaced if no label property is defined
-*   If type is select, an additional element is required with key 'options', value is an associative array of
+*   If type is select, an additional element is required with key 'options'. The value of this element must be an associative array of
     options for the dropdown, where key is the text for the option, and value is the value when that option is selected.
 
 When called by the $model->render() method, the generated controls will have their values set according to the values of the
