@@ -310,7 +310,8 @@ Here's an example that will unserialize meta when the key is equal to 'serialize
         
         public function hydrate_meta($meta_key, $meta_value)
         {
-            return ($meta_key === 'serialized_meta') unserialize($meta_value) : $meta_value;
+            return ($meta_key === 'serialized_meta') ?
+                unserialize($meta_value) : $meta_value;
         }
         
 ###public function dehydrate_meta
@@ -322,7 +323,8 @@ of a meta object. For a class with dehydrate_meta defined as follows:
     
         public function dehydrate_meta($meta_key, $meta_value)
         {
-            return ($meta_key === 'serialized_meta') serialize($meta_value) : $meta_value;
+            return ($meta_key === 'serialized_meta') ?
+                serialize($meta_value) : $meta_value;
         }
         
 Calling the below on a model instance of the class would make the following boolean statment true:
