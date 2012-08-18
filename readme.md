@@ -45,7 +45,10 @@ swpMVC routes are stored as an array of arrays, with each array stored represent
 structure
 
     <?php
-        $route = array('controller' => 'ControllerClass', 'method' => 'ControllerMethod', 'route' => '/url/of/route/:p/:p')
+        $route = array('controller' => 'ControllerClass',
+                                'method' => 'ControllerMethod',
+                                'route' => '/url/of/route/:p/:p'
+                            );
         
 There is no "automagic" routing, everything must be declared. This is done so that your routing structure is exactly as
 you want, with no additional steps required to turn off magic routes.
