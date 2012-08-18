@@ -39,6 +39,29 @@ rewrite rules. See the next section for syntax.
 
 ##Router
 
+### Adding routes
+
+swpMVC routes are stored as an array of arrays, with each array stored representing one route using the following
+structure
+
+    <?php
+        $route = array('controller' => 'ControllerClass', 'method' => 'ControllerMethod', 'route' => '/url/of/route/:p/:p')
+        
+There is no "automagic" routing, everything must be declared. This is done so that your routing structure is exactly as
+you want, with no additional steps required to turn off magic routes.
+
+### Routing parameters
+
+Parameters in your route are represented with the token ":p"
+
+The will be passed to your controller method in the order they are declared. Skipping named parameters allows the
+framework to use (only one additional querystring variable)[http://codex.wordpress.org/Rewrite_API/add_rewrite_tag]
+
+### Auto-flush rewrite rules
+
+The core framework will monitor whether swpMVC routes have been added, modified or removed, and flush the rewrite
+rules as needed, so there is no need to do this manually.
+
 
 ##Models
 
