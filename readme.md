@@ -45,6 +45,7 @@ swpMVC routes are stored as an array of arrays, with each array stored represent
 structure
 
     <?php
+    
         $route = array('controller' => 'ControllerClass',
                                 'method' => 'ControllerMethod',
                                 'route' => '/url/of/route/:p/:p'
@@ -64,6 +65,25 @@ framework to use (only one additional querystring variable)[http://codex.wordpre
 
 The core framework will monitor whether swpMVC routes have been added, modified or removed, and flush the rewrite
 rules as needed, so there is no need to do this manually.
+
+### Example
+
+Here's a full example of the adding routes from your swpMVC plugin based off the example plugin included in the example
+directory
+
+    <?php
+        
+        public function add_routes($routes)
+        {
+            $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'wp_style',
+                        'route' => '/recent_thumbs/wp_style');
+            $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'swpmvc_style',
+                            'route' => '/recent_thumbs/swpmvc_style');
+            $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'render_post_form',
+                            'route' => '/post_form/:p');
+            $s =  array_merge($routes, $r);
+            return $s;
+        }
 
 
 ##Models
