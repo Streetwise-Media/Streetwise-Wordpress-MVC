@@ -384,7 +384,11 @@ Stamp tags take the form of html comments, with an opening and closing comment r
 
     <a href="<!-- url --><!-- /url -->">Link to somewhere</a>
     
-gives you a replaceable region labeled url. If you place this in a file called template.tpl, and call the below code from your controller:
+gives you a region labeled url that can be manipulated from the stamp object.
+
+###$stamp->replace()
+
+If you place the above template code in a file called template.tpl, and call the below code from your controller:
 
     <?php
         
@@ -393,6 +397,39 @@ gives you a replaceable region labeled url. If you place this in a file called t
 the result would be:
 
     <a href="http://www.somesite.com">Link to somewhere</a>
+    
+###$stamp->copy()
+
+This method allows you to copy defined template regions. Given the below template in file template.tpl:
+
+    <p>Here's some stuff</p>
+    <!-- more_stuff -->
+        <p>And here's some more stuff</p>
+    <!-- /more_stuff -->
+    
+The below code would yield true at the boolean in the last statement:
+
+    <?php
+    
+        $more_stuff = $this->template('template')->copy('more_stuff');
+        $more_stuff === "<p>And here's some more stuff</p>";
+
+
+Given the below template in file post.tpl:
+
+    <h1><!-- post_title --><!-- /post_title --></h1>
+    <!-- author_data -->
+        by <!-- display_name --><!-- /display_name -->
+    <!-- /author_data -->
+    
+The below controller code would replace post_title with the title of the post object, and display_name with the display name
+of the post author:
+
+    <?php
+        
+        $post = Post::first(array('include' => 'user');
+        echo $post->render($this->template('post'))
+            ->replace('author_data', $post->user->render($this->template('post')->copy('author_data')));
     
 ###Rendering models with templates
 
