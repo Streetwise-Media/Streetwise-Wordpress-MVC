@@ -20,7 +20,8 @@ class swpMVCBaseModel extends ActiveRecord\Model
             $render_method = 'render_'.$key;
             $value = (method_exists($this, $render_method) and is_callable(array($this, $render_method)))
                 ? $this->$render_method() : $val;
-            $output = $output->replace($key, trim($value));
+            $output = $output->replace($key, $value);
+            if ($this->needs_template_cleanup($key, $value)) $output = $output->replace($key.'_block', '');
         }
         if (method_exists($this, 'renderers') and is_callable(array($this, 'renderers')) and is_array($this->renderers()))
             foreach($this->renderers() as $key => $func_array)
@@ -30,6 +31,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
                             !is_array($func_array[1])) continue;
                 $r = call_user_func_array(array($this, $func_array[0]), $func_array[1]);
                 $output = $output->replace($key, $r);
+                if ($this->needs_template_cleanup($key, $r)) $output = $output->replace($key.'_block', '');
             }
         $class = get_called_class();
         if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
@@ -44,6 +46,11 @@ class swpMVCBaseModel extends ActiveRecord\Model
             $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $this->$prop));
         }
         return $output;
+    }
+    
+    public function needs_template_cleanup($key, $value)
+    {
+        return $value === false or empty($value) or trim($value) === '';
     }
     
     public static function renderForm(Stamp $output, $prefix = false)

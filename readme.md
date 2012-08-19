@@ -188,6 +188,29 @@ passed to the render method contains a tag called post_name, and your Post model
 the return value of that method will be used to populate the Stamp object in favor of the value of the instance property
 post_name.
 
+###public function needs_template_cleanup
+
+This method accepts two parameters, property\_name and property\_value. You can overload this method in your models to
+determine which values for a property will cause a Stamp tag of the format {{property\_name}}\_block to be stripped from the
+template when rendered. Here's an example that will strip \_block tags for any falsy value, or a custom value if the property is
+post\_title:
+
+    <?php
+        
+        public function needs_template_cleanup($property_name, $property_value)
+        {
+            if ($property_name === 'post_title')
+                return $property_value === false or
+                    trim($property_value) === '' or
+                    $property_value === 'This is a post title where I want the post_title_block tag stripped';
+            return $property_value === false or
+                empty($property_value) or
+                trim($property_value) === '';
+        }
+        
+As shown in the example above, the {{property\_name}}_block tag is stripped when $model->needs\_template\_cleanup()
+returns true. The default behavior is to check for falsy values.
+
 ###public function renderers
 
 This method allows you to define additional renderers (not limited to model properties) that the model should be able to handle.
@@ -444,6 +467,14 @@ to the following conventions:
 
 The above gets replaced with a model property named attribute\_name, or the return value of model instance method
     render\_attribute\_name if such method exists.
+    
+    <!-- attribute_name_block -->
+        <!-- attribute_name --><!-- /attribute_name -->
+    <!-- /attribute_name_block -->
+    
+The above gets replaced with a model property named attribute\_name, or the return value of model instance method
+render\_attribute\_name if such method exists. If the value returns true when passed through $model->needs_template_cleanup(),
+the entire attribute\_name\_block section is stripped from the template when rendered.
     
     <!-- control_attribute_name --><!-- /control_attribute_name -->
 
