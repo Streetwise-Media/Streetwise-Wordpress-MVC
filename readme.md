@@ -400,16 +400,11 @@ When using the [$model->render()](/#models/model-render) method, your model will
 to the following conventions:
 
     <!-- attribute\_name --><!-- /attribute\_name -->
-
 *  Gets replaced with a model property named attribute\_name, or the return value of model instance method
-    render\_attribute\_name if such method exists.
-    
+    render\_attribute\_name if such method exists.    
     <!-- control\_attribute\_name --><!-- /control\_attribute\_name -->
-    
 *  Gets replaced with the 'attribute\_name' element of the array returned by static class method [controls](#models/public-static-function-controls)
-
-    <!-- control\_label\_attribute\_name --><!-- /control\_label\_attribute\_name -->
-    
+    <!-- control\_label\_attribute\_name --><!-- /control\_label\_attribute\_name -->    
 *  Gets replaced with the value of the 'label' key under the 'attribute\_name' key of the array returned by static class method controls
 
 ##Controllers
