@@ -62,7 +62,7 @@ you want, with no additional steps required to turn off magic routes.
 
 Parameters in your route are represented with the token ":p"
 
-The will be passed to your controller method in the order they are declared. Skipping named parameters allows the
+They will be passed to your controller method in the order they are declared. Skipping named parameters allows the
 framework to use [only one additional querystring variable](http://codex.wordpress.org/Rewrite_API/add_rewrite_tag)
 
 ### Auto-flush rewrite rules
