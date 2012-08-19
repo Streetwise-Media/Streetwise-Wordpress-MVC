@@ -558,9 +558,71 @@ any references if you change the route definitions for your plugin.
 
 ###$this->logError()
 
-This method accepts a string as a parameter, and will write that stringa s an E\_USER\_WARNING level error to your PHP log,
+This method accepts a string as a parameter, and will write that string as an E\_USER\_WARNING level error to your PHP log,
 as well as an error notice to the pQp Console if you are running in the development environment.
 
-##Logging
+##Logging/Utility
 
 ***
+
+Several features have been incorporated into the framework to further improve the development experience.
+
+###PHP Quick Profiler
+
+The [PHP Quick Profiler](https://github.com/particletree/PHP-Quick-Profiler) is included with the framework. To activate,
+add the following code to your wp-config file:
+
+    <?php
+        
+        define('SW_WP_ENVIRONMENT', 'development');
+        
+The pQp will show on the bottom of every page, and by default will log load time, memory usage, file includes, and all SQL queries.
+
+The following additional methods are available to write debug info to the console:
+
+####Console::log()
+
+Accepts two parameters. First is a variable to be dumped, second is an optional name.
+This writes a general information entry to the console.
+
+####Console::error()
+
+Accepts same parameters as Console::log(). This writes an error entry to the console.
+
+While best practice is to clean up any debug code you write after you don't need it anymore, leaving calls to Console::log() or
+Console::error() in your code will not cause any issues if you run that code without your SW\_WP\_ENVIRONMENT set to development.
+
+###SW_LOG_QUERIES
+
+In cases where you want to debug queries that cannot be seen by the pQp (typically queries run on ajax calls,) the following code will
+cause all queries to be written to your PHP log at level E\_USER\_WARNING:
+
+    <?php
+    
+        define('SW_LOG_QUERIES', true);
+        
+You can then set this to false again to only log a specific set of queries within your code.
+
+
+###Underscore PHP
+
+The [Underscore PHP library](http://brianhaveri.github.com/Underscore.php/)
+is an immensely useful set of tools for eliminating bulky boilerplate code used for common data
+manipulations in favor of more elegant, concise alternatives, largely taking advantage of the closure support introduced in
+PHP > 5.3. To avoid naming clashes with WordPress' \_\_ function, the included copy has been modified and can be accessed
+only via the class methods, using a single underscore to reference the class. For example:
+
+    <?php
+    
+        echo \_::reduce(array('that\'s', 'all', 'for', 'now'), function($memo, $a) { return $memo.' '.$a; }, '');
+        
+##Credits
+
+The following open source works have been instrumental in the creation of swpMVC, either as starting points, or having been
+included in their entirety within the framework:
+
+*   Stamp by [Gabor DeMooij](http://www.gabordemooij.com/)
+*   [PHP Quick Profiler](https://github.com/particletree/PHP-Quick-Profiler), created by Ryan Campbell and designed by Kevin Hale
+*   [WP-Developer-Tools](http://wordpress.org/extend/plugins/wp-developer-tools/) by [PHKCorp](http://profiles.wordpress.org/phkcorp2005/)
+*   [PHP ActiveRecord](http://www.phpactiverecord.org/) by [Clay vanSchalkwijk, Jacques Fuentes, and Kien La](http://www.phpactiverecord.org/welcome/about)
+*   [Underscore PHP](http://brianhaveri.github.com/Underscore.php/) by [Brian Haveri](https://github.com/brianhaveri)
