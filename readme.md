@@ -474,13 +474,13 @@ Best practice is to define this in the constructor, in which case you'll want to
             parent::__construct();
         }
         
-###$this->\_scripts
+###$this->_scripts
 
 Set this property to an array where each element is an array of arguments to be passed to
 [wp_enqueue_script](http://codex.wordpress.org/Function_Reference/wp_enqueue_script). Define the property before calling
 get_header() to have your scripts automatically enqueued on that page.
 
-###$this->\_styles
+###$this->_styles
 
 Same as $this->\_scripts, except each element of this array should be an array of arguments for
 [wp_enqueue_style](http://codex.wordpress.org/Function_Reference/wp_enqueue_style).
