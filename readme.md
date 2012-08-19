@@ -614,7 +614,8 @@ only via the class methods, using a single underscore to reference the class. Fo
 
     <?php
     
-        echo \_::reduce(array('that\'s', 'all', 'for', 'now'), function($memo, $a) { return $memo.' '.$a; }, '');
+        echo _::reduce(array('that\'s', 'all', 'for', 'now'),
+            function($memo, $a) { return $memo.' '.$a; }, '');
         
 ##Credits
 
