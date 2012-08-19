@@ -19,14 +19,14 @@ class swFormHelper
     {
         $type = (isset($control['input_type'])) ? $control['input_type'] : 'text';
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
-        return "<input class='{$this->_prefix} {$this->_prefix}_$key'
+        return "<input class='{$this->_prefix} {$this->_prefix}_control {$this->_prefix}_$key'
             name='{$this->_prefix}[$key]' id='$nid' type='$type' value='$value' />";
     }
     
     public function select($key, $control, $value=false)
     {
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
-        $select = "<select class='{$this->_prefix} {$this->_prefix}_$key'
+        $select = "<select class='{$this->_prefix} {$this->_prefix}_control {$this->_prefix}_$key'
             name='{$this->_prefix}[$key]' id='$nid'>";
         foreach($control['options'] as $text => $val)
         {
@@ -40,7 +40,7 @@ class swFormHelper
     public function textarea($key, $control, $value=false)
     {
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
-        return "<textarea class='{$this->_prefix} {$this->_prefix}_$key' id='$nid'
+        return "<textarea class='{$this->_prefix} {$this->_prefix}_control {$this->_prefix}_$key' id='$nid'
             name='{$this->_prefix}[$key]'>$value</textarea>";
     }
 }
