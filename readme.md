@@ -459,7 +459,8 @@ The above gets replaced with the value of the 'label' key under the 'attribute\_
 
 ###$this->page_title
 
-Set this property in your controller method to what you want the title attribute on the generated page to be.
+Set this property in your controller method to what you want the title attribute on the generated page to be. This needs to be set
+before you call get\_header().
 
 ###$this->_templatedir
 
@@ -478,7 +479,7 @@ Best practice is to define this in the constructor, in which case you'll want to
 
 Set this property to an array where each element is an array of arguments to be passed to
 [wp_enqueue_script](http://codex.wordpress.org/Function_Reference/wp_enqueue_script). Define the property before calling
-get_header() to have your scripts automatically enqueued on that page.
+get\_header() to have your scripts automatically enqueued on that page.
 
 ###$this->_styles
 
