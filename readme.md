@@ -595,7 +595,8 @@ any references if you change the route definitions for your plugin.
 ###$this->logError()
 
 This method accepts a string as a parameter, and will write that string as an E\_USER\_WARNING level error to your PHP log,
-as well as an error notice to the pQp Console if you are running in the development environment.
+as well as an error notice to the [pQp Console](/Streetwise-Wordpress-MVC/#logging-utility/php-quick-profiler) if you are running
+in the development environment.
 
 ##Logging/Utility
 
