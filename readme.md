@@ -350,10 +350,10 @@ columns foreign_key, meta_key, meta_value will work with these methods, once you
 This method will return an empty array if there is no $has_many [relationship](http://www.phpactiverecord.org/projects/main/wiki/Associations)
 named meta defined for the model on which it is called.
 
-If the meta relationship is defined, it must point to a meta table with columns meta_key and meta_value. By calling $model->meta()
-under when these circumstances are met, the return value will be an associative array where keys are equal to meta_key, and
-values are equal to the meta_value. In the case of duplicate meta_key rows for one model instance, the meta_value will be an
-indexed array of all values found.
+If the meta relationship is defined, it must point to a Model of a table with columns foreign_key, meta_key and meta_value.
+By calling $model->meta() when these circumstances are met, the return value will be an associative array where keys are
+equal to meta_key, and values are equal to the meta_value. In the case of duplicate meta_key rows for one model instance,
+the meta_value will be an indexed array of all values found.
 
 It is recommended to [eager load](http://www.phpactiverecord.org/projects/main/wiki/Finders#eager-loading) the meta when
 querying for your models if you intend to use this method, to avoid the
