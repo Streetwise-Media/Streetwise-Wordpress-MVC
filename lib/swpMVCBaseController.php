@@ -68,7 +68,6 @@ class swpMVCBaseController
     {
         $routes = swpMVCCore::instance()->router->routes;
         $matched_route = _::find($routes, function($route) use ($controller, $method, $params) {
-            //echo $route['controller'].' '.$route['method'].' '.substr_count($route['route'], ':p').' '.count($params);
             return $route['controller'] === $controller and $route['method'] == $method and
                 count($params) === substr_count($route['route'], ':p');
         });

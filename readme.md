@@ -457,6 +457,9 @@ The above gets replaced with the value of the 'label' key under the 'attribute\_
 
 ***
 
+With well defined models, controllers can be relatively sparse. Your controller classes must extend swpMVCBaseController, which
+equips them with the following functionality.
+
 ###$this->page_title
 
 Set this property in your controller method to what you want the title attribute on the generated page to be. This needs to be set
@@ -490,6 +493,72 @@ Same as $this->\_scripts, except each element of this array should be an array o
 
 Same as \_styles and \_scripts, except each element of this array should be an array of arguments for
 [wp_localize_script](http://codex.wordpress.org/Function_Reference/wp_localize_script).
+
+###$this->template()
+
+Requires $this->\_templatedir to be defined. Accepts the filename of a template (minus the file extension, which must be .tpl,)
+and returns a [Stamp view](/#views) object for population and rendering. Here's an example of using the template method to
+pass a view to a models render method:
+
+    <?php
+        
+        $post = Post::first();
+        $post->render($this->template('show_post'));
+        
+In the above example, we assume that the controllers templatedir property points to a directory that contains a file called
+show_post.tpl, which contains the correct [Stamp tags](/#views/stamp-tags) to be populated by the Post model.
+
+###$this->set404()
+
+This method generates a WordPress 404 page using the currently selected WordPress theme. It must be called before any output
+is generated. Here's an example of using this method within a controller method:
+
+    <?php
+    
+        public function show_post($slug=false)
+        {
+            if (!$slug) return $this->set404();
+            $post = Post::first(array('conditions' => array('post_name = ?', $slug)));
+            if (!$post) return $this->set404();
+            get_header();
+            $post->render($this->template('show_post'));
+            get_footer();
+        }
+        
+In this method, if no slug was passed to the controller method, we return a 404. If a slug was passed, we attempt to find a post
+using the provided slug. If we cannot, we return a 404. Only at that point if we have found a post using the provided slug do we
+begin to generate output from the controller method.
+
+###self::link()
+
+This method accepts three arguments, a controller class name, a method name, and an optional array of parameters. It will then
+return the corresponding url for that controller method. For example, if I've defined the following
+[route](/#router/adding-routes) in my plugin:
+    
+    <?php
+    
+        $route = array('controller' => 'ControllerClass',
+                            'method' => 'ControllerMethod',
+                            'route' => '/url/of/route/:p/:p'
+                        );
+                        
+Then the below statement would be true:
+
+    <?php
+    
+        ControllerClass::link(
+                    'ControllerClass',
+                    'ControllerMethod', 
+                    array('arg1', 'arg2')
+                ) === get_bloginfo('url').'/url/of/route/arg1/arg2';
+                
+The link method is preferable to hard coding any fragment of a url into your views or controllers, since this will automatically update
+any references if you change the route definitions for your plugin.
+
+###$this->logError()
+
+This method accepts a string as a parameter, and will write that stringa s an E\_USER\_WARNING level error to your PHP log,
+as well as an error notice to the pQp Console if you are running in the development environment.
 
 ##Logging
 
