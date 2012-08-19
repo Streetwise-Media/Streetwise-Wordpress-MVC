@@ -399,16 +399,16 @@ the result would be:
 When using the [$model->render()](/#models/model-render) method, your model will automatically replace tags named according
 to the following conventions:
 
-    <!-- attribute\_name --><!-- /attribute\_name -->
+    <!-- attribute_name --><!-- /attribute_name -->
 
 The above gets replaced with a model property named attribute\_name, or the return value of model instance method
     render\_attribute\_name if such method exists.
     
-    <!-- control\_attribute\_name --><!-- /control\_attribute\_name -->
+    <!-- control_attribute_name --><!-- /control_attribute_name -->
 
 The above gets replaced with the 'attribute\_name' element of the array returned by static class method [controls](#models/public-static-function-controls)
     
-    <!-- control\_label\_attribute\_name --><!-- /control\_label\_attribute\_name -->
+    <!-- control_label_attribute_name --><!-- /control_label_attribute_name -->
 
 The above gets replaced with the value of the 'label' key under the 'attribute\_name' key of the array returned by static class method controls
 
