@@ -359,6 +359,10 @@ It is recommended to [eager load](http://www.phpactiverecord.org/projects/main/w
 querying for your models if you intend to use this method, to avoid the
 [n+1 query problem](http://www.phabricator.com/docs/phabricator/article/Performance_N+1_Query_Problem.html)
 
+The method accepts two parameters, $key and $raw. Passing in $key returns the meta value where meta\_key matches the
+provided key. Passing in true for the $raw parameter will return the actual meta objects, as opposed to the hydrated
+meta\_values.
+
 ###public function hydrate_meta
 
 When working with ActiveRecord Models, WordPress will not serialize and unserialize data automatically for you. This method
