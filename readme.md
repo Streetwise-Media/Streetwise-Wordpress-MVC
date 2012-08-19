@@ -72,7 +72,7 @@ rules as needed, so there is no need to do this manually.
 
 ### Example
 
-Here's a full example of the adding routes from your swpMVC plugin based off the example plugin included in the example
+Here's a full example adding routes from your swpMVC plugin based off the example plugin included in the example
 directory
 
     <?php
