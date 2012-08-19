@@ -415,7 +415,7 @@ The below code would yield true at the boolean in the last statement:
         $more_stuff === "<p>And here's some more stuff</p>";
 
 
-Given the below template in file post.tpl:
+This is useful when populating one view with multiple models. For example, given the below template in file post.tpl:
 
     <h1><!-- post_title --><!-- /post_title --></h1>
     <!-- author_data -->
