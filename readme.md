@@ -171,10 +171,10 @@ will need to use table prefixes for any columns that are present in both the mai
 Model::tablename() methods.
 
 
-###Automatic escaping
+###Automatic stripslashes
 
-Model properties are automatically escaped when accessed directly. To override this, call the properties method on an object,
-and access the properties from the resulting array.
+Model properties in string format are automatically run through stripslashes when accessed directly. To override this, call the
+properties method on an object, and access the properties from the resulting array.
 
 ###$model->render()
 
