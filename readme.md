@@ -435,7 +435,7 @@ of the post author:
                 )
             );
     
-###Rendering models with templates
+###Populating views with $model->render()
 
 When using the [$model->render()](/#models/model-render) method, your model will automatically replace tags named according
 to the following conventions:
