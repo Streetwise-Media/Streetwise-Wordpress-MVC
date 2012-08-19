@@ -178,7 +178,7 @@ and access the properties from the resulting array.
 
 ###$model->render()
 
-swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp view object (see [Views](#views)
+swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp view object (see [Views](/Streetwise-Wordpress-MVC/#views)
 section for details,) and autopopulates the Stamp using the model properties.
 
 ###public function render_{{property_name}}
@@ -212,7 +212,7 @@ with no arguments.
 ###public static function controls
 
 This method allows you to define form controls that should be used to interact with model properties, which will then be used by
-the [render](#models/model-render) method to populate any Stamp tags of the format control\_{{property name}} and additionally
+the [render](/Streetwise-Wordpress-MVC/#models/model-render) method to populate any Stamp tags of the format control\_{{property name}} and additionally
 control\_label\_{{property name}} if the label attribute is defined for the control definition in the return value. The structure for the
 return value on this method is again an associative array of arrays which follow the structure below:
 
@@ -437,7 +437,7 @@ of the post author:
     
 ###Populating views with $model->render()
 
-When using the [$model->render()](/#models/model-render) method, your model will automatically replace tags named according
+When using the [$model->render()](/Streetwise-Wordpress-MVC/#models/model-render) method, your model will automatically replace tags named according
 to the following conventions:
 
     <!-- attribute_name --><!-- /attribute_name -->
@@ -447,7 +447,8 @@ The above gets replaced with a model property named attribute\_name, or the retu
     
     <!-- control_attribute_name --><!-- /control_attribute_name -->
 
-The above gets replaced with the 'attribute\_name' element of the array returned by static class method [controls](#models/public-static-function-controls)
+The above gets replaced with the 'attribute\_name' element of the array returned by static class method
+[controls](/Streetwise-Wordpress-MVC/#models/public-static-function-controls)
     
     <!-- control_label_attribute_name --><!-- /control_label_attribute_name -->
 
@@ -497,7 +498,7 @@ Same as \_styles and \_scripts, except each element of this array should be an a
 ###$this->template()
 
 Requires $this->\_templatedir to be defined. Accepts the filename of a template (minus the file extension, which must be .tpl,)
-and returns a [Stamp view](/#views) object for population and rendering. Here's an example of using the template method to
+and returns a [Stamp view](/Streetwise-Wordpress-MVC/#views) object for population and rendering. Here's an example of using the template method to
 pass a view to a models render method:
 
     <?php
@@ -506,7 +507,7 @@ pass a view to a models render method:
         $post->render($this->template('show_post'));
         
 In the above example, we assume that the controllers templatedir property points to a directory that contains a file called
-show_post.tpl, which contains the correct [Stamp tags](/#views/stamp-tags) to be populated by the Post model.
+show_post.tpl, which contains the correct [Stamp tags](/Streetwise-Wordpress-MVC/#views/stamp-tags) to be populated by the Post model.
 
 ###$this->set404()
 
@@ -533,7 +534,7 @@ begin to generate output from the controller method.
 
 This method accepts three arguments, a controller class name, a method name, and an optional array of parameters. It will then
 return the corresponding url for that controller method. For example, if I've defined the following
-[route](/#router/adding-routes) in my plugin:
+[route](/Streetwise-Wordpress-MVC/#router/adding-routes) in my plugin:
     
     <?php
     
