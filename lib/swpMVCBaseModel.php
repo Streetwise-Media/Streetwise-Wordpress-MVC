@@ -136,7 +136,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
     
     public function meta($key=false, $raw=false)
     {
-        if ($key and $raw) return _::find($this->meta, function($m) use ($key) { return $m->meta_key === $key; });
+        if ($key and $raw) return _::filter($this->meta, function($m) use ($key) { return $m->meta_key === $key; });
         if (!$key) return $this->load_meta();
         $meta = $this->load_meta();
         return $meta[$key];
