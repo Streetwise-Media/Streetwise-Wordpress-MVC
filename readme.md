@@ -202,7 +202,8 @@ post\_title:
             if ($property_name === 'post_title')
                 return $property_value === false or
                     trim($property_value) === '' or
-                    $property_value === 'This is a post title where I want the post_title_block tag stripped';
+                    $property_value ===
+                        'This is a post title where I want the post_title_block tag stripped';
             return $property_value === false or
                 empty($property_value) or
                 trim($property_value) === '';
