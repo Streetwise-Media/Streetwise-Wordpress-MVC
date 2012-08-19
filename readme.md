@@ -429,7 +429,11 @@ of the post author:
         
         $post = Post::first(array('include' => 'user');
         echo $post->render($this->template('post'))
-            ->replace('author_data', $post->user->render($this->template('post')->copy('author_data')));
+            ->replace('author_data',
+                $post->user->render(
+                    $this->template('post')->copy('author_data')
+                )
+            );
     
 ###Rendering models with templates
 
