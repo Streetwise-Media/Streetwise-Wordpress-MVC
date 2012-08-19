@@ -7,6 +7,7 @@ Description: MVC Framework for Streetwise WordPress development
 Author: Brian Zeligson
 Version: 0.1
 Author URI: http://brianzeligson.com
+License: GPL3 http://www.gnu.org/licenses/gpl.html
 */
 
 class swpMVCCore
