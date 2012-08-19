@@ -598,6 +598,14 @@ This method accepts a string as a parameter, and will write that string as an E\
 as well as an error notice to the [pQp Console](/Streetwise-Wordpress-MVC/#logging-utility/php-quick-profiler) if you are running
 in the development environment.
 
+###public function before()
+
+This method will run before any controller method is executed.
+
+###public function after()
+
+This method will run after any controller method is executed
+
 ##Logging/Utility
 
 ***
