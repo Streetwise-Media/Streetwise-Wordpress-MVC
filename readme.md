@@ -457,6 +457,39 @@ The above gets replaced with the value of the 'label' key under the 'attribute\_
 
 ***
 
+###$this->page_title
+
+Set this property in your controller method to what you want the title attribute on the generated page to be.
+
+###$this->_templatedir
+
+Set this property to the directory where your views for the current controller are stored, including a trailing slash.
+Best practice is to define this in the constructor, in which case you'll want to make sure to call the parent constructor as well:
+
+    <?php
+        
+        public function __construct()
+        {
+            $this->_templatedir = dirname(__FILE__).'/../views/';
+            parent::__construct();
+        }
+        
+###$this->\_scripts
+
+Set this property to an array where each element is an array of arguments to be passed to
+[wp_enqueue_script](http://codex.wordpress.org/Function_Reference/wp_enqueue_script). Define the property before calling
+get_header() to have your scripts automatically enqueued on that page.
+
+###$this->\_styles
+
+Same as $this->\_scripts, except each element of this array should be an array of arguments for
+[wp_enqueue_style](http://codex.wordpress.org/Function_Reference/wp_enqueue_style).
+
+###$this->_script_localizations
+
+Same as \_styles and \_scripts, except each element of this array should be an array of arguments for
+[wp_localize_script](http://codex.wordpress.org/Function_Reference/wp_localize_script).
+
 ##Logging
 
 ***
