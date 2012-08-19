@@ -256,7 +256,7 @@ The return value from this method is again an associative array of arrays which 
 The following must be true of any element in the controls array for it to be valid:
 
 *   The key must match the model property that the control corresponds to.
-*   Type must be either input, select, or textarea
+*   type must be either input, select, or textarea
 *   input_type is optional and only applies when type is set to input. Default is text.
 *   label is optional. control\_label\_{{property name}} tags will not be replaced if no label property is defined
 *   If type is select, an additional element is required with key 'options'. The value of this element must be an associative array of
