@@ -218,7 +218,7 @@ The return value from this method is again an associative array of arrays which 
 
     <?php
     
-        public function controls
+        public static function controls()
         {
             return array(
                 'property_name' => array(
