@@ -48,7 +48,8 @@ class Post extends swpMVCBaseModel
     static $has_many = array(
         array('postterms', 'class' => 'TermRelationship', 'foreign_key' => 'object_id'),
         array('comments', 'class' => 'Comment', 'foreign_key' => 'comment_post_ID',
-            'conditions' => array('comment_parent = ?', array('0')))
+            'conditions' => array('comment_parent = ?', array('0'))),
+        array('meta', 'class' => 'PostMeta', 'foreign_key' => 'post_id')
     );
     
     public function tags()
@@ -71,6 +72,19 @@ class Post extends swpMVCBaseModel
         );
     }
     
+}
+
+class PostMeta extends swpMVCBaseModel
+{
+    public static function tablename()
+    {
+        global $wpdb;
+        return $wpdb->prefix.'postmeta';
+    }
+    
+    static $belongs_to = array(
+                array('post', 'foreign_key' => 'post_id', 'class_name' => 'Post'),
+            );
 }
 
 class Comment extends swpMVCBaseModel

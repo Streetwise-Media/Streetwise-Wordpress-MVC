@@ -300,19 +300,18 @@ the docs, repo as needed.
 
 ###Included models
 
-####Post
 
-####TermRelationship
+*       Post
+*	PostMeta
+*	TermRelationship
+*	TermTaxonomy
+*	Term
+*	Comment
+*	User
+*	UserMeta
 
-####TermTaxonomy
-
-####Term
-
-####Comment
-
-####User
-
-####UserMeta
+All models can be found in models/wordpress_models.php. There's not alot of code, and the best way to learn model definition, as
+well as see what added methods are available on each model is to view the source.
 
 ##Model meta
 
