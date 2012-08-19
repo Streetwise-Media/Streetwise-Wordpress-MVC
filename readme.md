@@ -213,8 +213,8 @@ with no arguments.
 
 This method allows you to define form controls that should be used to interact with model properties, which will then be used by
 the [render](/Streetwise-Wordpress-MVC/#models/model-render) method to populate any Stamp tags of the format control\_{{property name}} and additionally
-control\_label\_{{property name}} if the label attribute is defined for the control definition in the return value. The structure for the
-return value on this method is again an associative array of arrays which follow the structure below:
+control\_label\_{{property name}} if the label attribute is defined for the corresponding element in the returned array.
+The return value from this method is again an associative array of arrays which must follow the structure below:
 
     <?php
     
