@@ -375,6 +375,42 @@ Calling the below on a model instance of the class would make the following bool
 
 ***
 
+swpMVC Views are based off of an older version of [Gabor DeMooij's Stamp library,](https://github.com/gabordemooij/stamp/blob/StampEngine/Stamp.php)
+using extremely simple principles. Your views will contain no logic at all, and in most cases will be completely valid HTML on their own.
+
+###Stamp tags
+
+Stamp tags take the form of html comments, with an opening and closing comment representing one replaceable block. For example:
+
+    <a href="<!-- url --><!-- /url -->">Link to somewhere</a>
+    
+gives you a replaceable region labeled url. If you place this in a file called template.tpl, and call the below code from your controller:
+
+    <?php
+        
+        echo $this->template('template')->replace('url', 'http://www.somesite.com');
+        
+the result would be:
+
+    <a href="http://www.somesite.com">Link to somewhere</a>
+    
+###Rendering models with templates
+
+When using the [$model->render()](/#models/model-render) method, your model will automatically replace tags named according
+to the following conventions, with regards to all detail laid out in the Models section of the documentation.
+
+    <!-- attribute\_name --><!-- /attribute\_name -->
+
+*   Gets replaced with a model property named attribute\_name, or the return value of model instance method
+    render\_attribute\_name if such method exists.
+    
+    <!-- control\_attribute\_name --><!-- /control\_attribute\_name -->
+    
+*   Gets replaced with the 'attribute\_name' element of the array returned by static class method [controls](#models/public-static-function-controls)
+
+    <!-- control\_label\_attribute\_name --><!-- /control\_label\_attribute\_name -->
+    
+*    Gets replaced with the value of the 'label' key under the 'attribute\_name' key of the array returned by static class method controls
 
 ##Controllers
 
