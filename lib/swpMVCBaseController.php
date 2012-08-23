@@ -5,10 +5,10 @@ class swpMVCBaseController
     
     public $page_title = "";
     public $_templatedir;
-    public $_scripts;
-    public $_script_localizations;
-    public $_styles;
-    protected static $_cache;
+    public $_scripts = array();
+    public $_script_localizations = array();
+    public $_styles = array();
+    protected static $_cache = array();
 
     public function __construct()
     {
