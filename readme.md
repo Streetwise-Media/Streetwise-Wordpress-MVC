@@ -606,6 +606,27 @@ This method will run before any controller method is executed.
 
 This method will run after any controller method is executed
 
+###protected static $_cache
+
+Set this variable on your controller class to stash queried data for accessing via other parts of your codebase. For example to
+access a post queried from your controller method from a sidebar widget without setting a global variable or running a second
+query, in your controller use:
+
+    <?php
+    
+        $post = Post::first();
+        self::$_cache['post'] = $post;
+
+And then in your widget code you can use the following:
+
+    <?php
+    
+        $cache = ControllerClass::cache();
+        $post = $cache['post'];
+        
+Note you must use the static cache() method to retrieve the value. This prevents outside sources from polluting the data
+cached by your controller.
+
 ##Logging/Utility
 
 ***

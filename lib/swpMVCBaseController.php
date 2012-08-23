@@ -8,6 +8,7 @@ class swpMVCBaseController
     public $_scripts;
     public $_script_localizations;
     public $_styles;
+    protected static $_cache;
 
     public function __construct()
     {
@@ -21,6 +22,11 @@ class swpMVCBaseController
     {
     	if(trim($this->page_title) !== '') return $this->page_title;
     	return $title;
+    }
+    
+    public static function cache()
+    {
+        return self::$_cache;
     }
     
     public function template($name)
