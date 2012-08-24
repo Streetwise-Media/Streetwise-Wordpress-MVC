@@ -330,6 +330,8 @@ the docs, repo as needed.
 *	TermRelationship
 *	TermTaxonomy
 *	Term
+*       Category
+*       Tag
 *	Comment
 *	User
 *	UserMeta

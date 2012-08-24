@@ -124,6 +124,42 @@ class Term extends swpMVCBaseModel
     );
 }
 
+class Category extends Term
+{
+    public static function joins()
+    {
+        global $wpdb;
+        $tt = $wpdb->prefix.'term_taxonomy';
+        $t = self::tablename();
+        return "LEFT JOIN {$tt} ON {$t}.term_id = {$tt}.term_id";
+    }
+    
+    public static function conditions()
+    {
+        global $wpdb;
+        $tt = $wpdb->prefix.'term_taxonomy';
+        return array("$tt.taxonomy = ?", 'category');
+    }
+}
+
+class Tag extends Term
+{
+    public static function joins()
+    {
+        global $wpdb;
+        $tt = $wpdb->prefix.'term_taxonomy';
+        $t = self::tablename();
+        return "LEFT JOIN {$tt} ON {$t}.term_id = {$tt}.term_id";
+    }
+    
+    public static function conditions()
+    {
+        global $wpdb;
+        $tt = $wpdb->prefix.'term_taxonomy';
+        return array("$tt.taxonomy = ?", 'post_tag');
+    }
+}
+
 class User extends swpMVCBaseModel
 {
     private $_usermeta;
