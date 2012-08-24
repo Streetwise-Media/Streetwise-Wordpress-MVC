@@ -57,7 +57,7 @@ class swpMVCCore
         ActiveRecord\Config::initialize(function($cfg)
         {
             $cfg->set_connections(array(
-            'development' => 'mysql://'.DB_USER.':'.DB_PASSWORD.'@'.DB_HOST.'/'.DB_NAME.';charset=utf8'));
+            'development' => 'mysql://'.DB_USER.':'.DB_PASSWORD.'@'.DB_HOST.'/'.DB_NAME.'?charset=utf8'));
         });
     }
     
