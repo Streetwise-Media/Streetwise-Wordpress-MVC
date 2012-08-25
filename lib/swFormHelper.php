@@ -18,9 +18,10 @@ class swFormHelper
     public function input($key, $control, $value=false)
     {
         $type = (isset($control['input_type'])) ? $control['input_type'] : 'text';
+        $checked = ($type === 'checkbox' and $value != false) ? 'checked="checked"' : '';
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
         return "<input class='{$this->_prefix} {$this->_prefix}_control {$this->_prefix}_$key'
-            name='{$this->_prefix}[$key]' id='$nid' type='$type' value='$value' />";
+            name='{$this->_prefix}[$key]' id='$nid' type='$type' $checked value='$value' />";
     }
     
     public function select($key, $control, $value=false)
