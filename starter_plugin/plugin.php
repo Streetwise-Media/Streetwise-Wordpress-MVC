@@ -23,7 +23,7 @@ class swpMVC_Starter
     public static function instance()
     {
         if (!isset(self::$_instance))
-            self::$_instance = new swpMVC_Example();
+            self::$_instance = new swpMVC_Starter();
         return self::$_instance;
     }
     
