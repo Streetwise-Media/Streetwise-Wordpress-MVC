@@ -6,13 +6,17 @@ and FuelPHP, it aims to make routing, modeling, and rendering easy, giving you m
 over your code structure than WordPress gives out of the box, without adding too much
 extra work.
 
-The simplest way to cover some of the initial concepts and get started is by examining (and using)
-the starter plugin found in the starter_plugin directory.
+##Tutorial
 
+The quickest way to get familiar with the swpMVC framework is with the TodoApp tutorial found
+[here](http://streetwise-media.github.com/swpmvc_todos/#looking-at-other-users-todos)
 
 ##Starter Plugin
 
 ***
+
+While swpMVC currently does not include any code generation, you can get a jump start on plugin development by examining
+(and using) the starter plugin found in the starter_plugin directory.
 
 ###Why a singleton?
 
