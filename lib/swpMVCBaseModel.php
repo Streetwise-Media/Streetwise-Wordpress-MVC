@@ -72,8 +72,8 @@ class swpMVCBaseModel extends ActiveRecord\Model
     
     public function form_helper()
     {
-        if (!isset($this->form_helper) or !is_object($this->form_helper))
-            $this->form_helper = new swFormHelper();
+        if (!isset($this->_form_helper) or !is_object($this->_form_helper))
+            $this->_form_helper = new swFormHelper();
         return $this->_form_helper;
     }
     
