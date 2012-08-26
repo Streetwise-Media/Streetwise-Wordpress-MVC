@@ -9,7 +9,7 @@ extra work.
 ##Tutorial
 
 The quickest way to get familiar with the swpMVC framework is with the TodoApp tutorial found
-[here](http://streetwise-media.github.com/swpmvc_todos/#looking-at-other-users-todos)
+[here](http://streetwise-media.github.com/swpmvc_todos/)
 
 ##Starter Plugin
 
