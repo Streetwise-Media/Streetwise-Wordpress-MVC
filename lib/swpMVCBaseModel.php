@@ -4,7 +4,6 @@ class swpMVCBaseModel extends ActiveRecord\Model
 {
     private $_meta;
     private $_form_helper;
-    public $sanitize_render;
     
     public function &read_attribute($attr)
     {

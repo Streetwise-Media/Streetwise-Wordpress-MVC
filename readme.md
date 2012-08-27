@@ -185,6 +185,30 @@ properties method on an object, and access the properties from the resulting arr
 swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp view object (see [Views](/Streetwise-Wordpress-MVC/#views)
 section for details,) and autopopulates the Stamp using the model properties.
 
+###public function sanitize_render()
+
+This method accepts a model property value as a parameter and gives you a chance to sanitize it before it is returned. This
+will be applied any time you directly access a model property. It can be bypassed  in the same was described under
+the [automatic stripslashes section](http://streetwise-media.github.com/Streetwise-Wordpress-MVC/#models/automatic-stripslashes).
+
+Here's an example of a sanitize_render definition that will run all model properties through strip_tags when accessed directly:
+
+    <?php
+    
+        public function sanitize_render($value)
+        {
+            return strip_tags($value);
+        }
+        
+        //calling the following on an instance of this model would strip all tags from the property value:
+        
+        echo $model->property;
+        
+        //the following would bypass
+        
+        $properties = $model->properties(); 
+        echo $properties['property'];
+
 ###public function render_{{property_name}}
 
 These methods act as overrides for your properties when called by the render method. For example, if a Stamp view object
