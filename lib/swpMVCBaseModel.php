@@ -4,11 +4,13 @@ class swpMVCBaseModel extends ActiveRecord\Model
 {
     private $_meta;
     private $_form_helper;
+    public $sanitize_render;
     
     public function &read_attribute($attr)
     {
         $value = parent::read_attribute($attr);
         if (is_string($value)) $value = stripslashes($value);
+        if (method_exists($this, 'sanitize_render') and is_callable(array($this, 'sanitize_render'))) return $this->sanitize_render($value);
         return $value;
     }
     
@@ -19,7 +21,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         {
             $render_method = 'render_'.$key;
             $value = (method_exists($this, $render_method) and is_callable(array($this, $render_method)))
-                ? $this->$render_method() : $val;
+                ? $this->$render_method() : $this->$key;
             $output = $output->replace($key, $value);
             if ($this->needs_template_cleanup($key, $value)) $output = $output->replace($key.'_block', '');
         }
