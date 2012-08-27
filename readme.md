@@ -200,7 +200,8 @@ Here's an example of a sanitize_render definition that will run all model proper
             return strip_tags($value);
         }
         
-        //calling the following on an instance of this model would strip all tags from the property value:
+        //calling the following on an instance of this model
+        //would strip all tags from the property value:
         
         echo $model->property;
         
