@@ -127,7 +127,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $self = $this;
         _::each($this->meta, function($m) use (&$meta, $self) {
             $value = (false !== $hydrated_value = $self->hydrate_meta($m->meta_key, $m->meta_value)) ? $hydrated_value : $m->meta_value;
-            if (isset($meta[$m->meta_key]) and is_array($meta[$m->meta_key])) return $meta[$m->meta_key] = $value;
+            if (isset($meta[$m->meta_key]) and is_array($meta[$m->meta_key])) return $meta[$m->meta_key][] = $value;
             if (!isset($meta[$m->meta_key])) return $meta[$m->meta_key] = $value;
             return $meta[$m->meta_key] = array($meta[$m->meta_key], $value);
         });
