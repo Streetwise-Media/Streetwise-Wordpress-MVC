@@ -9,7 +9,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
     {
         $value = parent::read_attribute($attr);
         if (is_string($value)) $value = stripslashes($value);
-        if (method_exists($this, 'sanitize_render') and is_callable(array($this, 'sanitize_render'))) return $this->sanitize_render($value);
+        if (method_exists($this, 'sanitize_render') and is_callable(array($this, 'sanitize_render'))) return $this->sanitize_render($value, $attr);
         return $value;
     }
     

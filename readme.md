@@ -187,16 +187,18 @@ section for details,) and autopopulates the Stamp using the model properties.
 
 ###public function sanitize_render()
 
-This method accepts a model property value as a parameter and gives you a chance to sanitize it before it is returned. This
+This method accepts two parameters, a model property value and the property name, and gives you a chance to sanitize it before it is returned. This
 will be applied any time you directly access a model property. It can be bypassed  in the same was described under
 the [automatic stripslashes section](http://streetwise-media.github.com/Streetwise-Wordpress-MVC/#models/automatic-stripslashes).
 
-Here's an example of a sanitize_render definition that will run all model properties through strip_tags when accessed directly:
+Here's an example of a sanitize_render definition that will run all model properties except title
+through strip_tags when accessed directly:
 
     <?php
     
-        public function sanitize_render($value)
+        public function sanitize_render($value, $name)
         {
+            if ($name === 'title') return $value;
             return strip_tags($value);
         }
         
