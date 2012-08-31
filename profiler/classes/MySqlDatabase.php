@@ -89,7 +89,7 @@ class MySqlDatabase {
 	public function log($sql, $values)
 	{
 		foreach($values as $value) $sql = preg_replace('/\?/', $value, $sql, 1);
-		$this->query($sql);
+		//$this->query($sql);
 		if (SW_LOG_QUERIES === true) trigger_error($sql, E_USER_WARNING);
 	}
 	
