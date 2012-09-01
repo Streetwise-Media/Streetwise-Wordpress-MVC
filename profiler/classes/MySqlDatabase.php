@@ -104,7 +104,7 @@ class MySqlDatabase {
 	          	DEBUGGING
 	------------------------------------*/
 	
-	function logQuery($sql, $start, $size=0) {
+	function logQuery($sql, $start=0, $size=0) {
 		$query = array(
 				'sql' => $sql,
 				'time' => ($this->getTime() - $start)*1000,
