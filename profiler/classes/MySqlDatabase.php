@@ -90,6 +90,8 @@ class MySqlDatabase {
 	{
 		foreach($values as $value) $sql = preg_replace('/\?/', $value, $sql, 1);
 		//$this->query($sql);
+		$this->queryCount += 1;
+		$this->logQuery($sql, $this->getTime(), 0);
 		if (SW_LOG_QUERIES === true) trigger_error($sql, E_USER_WARNING);
 	}
 	
