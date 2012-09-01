@@ -31,7 +31,7 @@ class MySqlDatabase {
 		$this->host = $host;
 		$this->user = $user;
 		$this->password = $password;
-		add_filter('query',array($this,'query'));
+		add_filter('query',array($this,'logQuery'));
 		$self = $this;
 		ActiveRecord\Config::initialize(function($cfg) use (&$self) {
 			$cfg->set_logging(true);
@@ -112,6 +112,7 @@ class MySqlDatabase {
 				'size' => $size
 			);
 		array_push($this->queries, $query);
+		return $sql;
 	}
 	
 	function getTime() {
