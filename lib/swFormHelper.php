@@ -27,11 +27,12 @@ class swFormHelper
     public function select($key, $control, $value=false)
     {
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
+        $multiple = (isset($control['multiple']) and $control['multiple']) ? "multiple='multiple'" : '';
         $select = "<select class='{$this->_prefix} {$this->_prefix}_control {$this->_prefix}_$key'
-            name='{$this->_prefix}[$key]' id='$nid'>";
+            name='{$this->_prefix}[$key]' id='$nid' $multiple>";
         foreach($control['options'] as $text => $val)
         {
-            $selected = ($val === $value) ? "selected='selected'" : '';
+            $selected = ((is_array($value) and in_array($val, $value)) or $val === $value) ? "selected='selected'" : '';
             $select .= "<option value='$val' $selected>$text</option>";
         }
         $select .= "</option>";
