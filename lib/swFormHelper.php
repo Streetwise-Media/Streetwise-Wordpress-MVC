@@ -35,7 +35,7 @@ class swFormHelper
             $selected = ((is_array($value) and in_array($val, $value)) or $val === $value) ? "selected='selected'" : '';
             $select .= "<option value='$val' $selected>$text</option>";
         }
-        $select .= "</option>";
+        $select .= "</select>";
         return $select;
     }
     
