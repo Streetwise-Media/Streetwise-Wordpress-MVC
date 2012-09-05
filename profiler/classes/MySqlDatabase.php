@@ -31,7 +31,7 @@ class MySqlDatabase {
 		$this->host = $host;
 		$this->user = $user;
 		$this->password = $password;
-		add_filter('query',array($this,'query'));
+		add_filter('query',array($this,'logQuery'));
 		$self = $this;
 		ActiveRecord\Config::initialize(function($cfg) use (&$self) {
 			$cfg->set_logging(true);
@@ -89,7 +89,8 @@ class MySqlDatabase {
 	public function log($sql, $values)
 	{
 		foreach($values as $value) $sql = preg_replace('/\?/', $value, $sql, 1);
-		$this->query($sql);
+		//$this->query($sql);
+		$this->logQuery($sql, $this->getTime(), 0);
 		if (SW_LOG_QUERIES === true) trigger_error($sql, E_USER_WARNING);
 	}
 	
@@ -103,13 +104,15 @@ class MySqlDatabase {
 	          	DEBUGGING
 	------------------------------------*/
 	
-	function logQuery($sql, $start, $size) {
+	function logQuery($sql, $start=0, $size=0) {
 		$query = array(
 				'sql' => $sql,
 				'time' => ($this->getTime() - $start)*1000,
 				'size' => $size
 			);
 		array_push($this->queries, $query);
+		$this->queryCount += 1;
+		return $sql;
 	}
 	
 	function getTime() {

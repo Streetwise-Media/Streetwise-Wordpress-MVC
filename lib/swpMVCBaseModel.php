@@ -43,8 +43,9 @@ class swpMVCBaseModel extends ActiveRecord\Model
         {
             if (!$class::validate_control($prop, $control)) continue;
             if (isset($control['label']))
-                $output = $output->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control, htmlentities($this->$prop)));
-            $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $this->$prop));
+                $output = $output->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control));
+            $control_val = (is_string($this->$prop)) ? htmlentities($this->$prop) : $this->$prop;
+            $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $control_val));
         }
         return $output;
     }
