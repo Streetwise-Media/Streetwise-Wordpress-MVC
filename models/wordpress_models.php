@@ -64,7 +64,7 @@ class Post extends swpMVCBaseModel
         return _::map($cat_terms, function($term) { return $term->termtaxonomy->term; });
     }
     
-    public function render_post_title()
+    public function render_post_content()
     {
         return apply_filters('the_content', $this->post_content);
     }
