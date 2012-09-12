@@ -42,6 +42,8 @@ class Post extends swpMVCBaseModel
         return $wpdb->prefix.'posts';
     }
     
+    static $primary_key = 'ID';
+    
     static $belongs_to = array(
                     array('user', 'foreign_key' => 'post_author')
                 );
@@ -50,6 +52,11 @@ class Post extends swpMVCBaseModel
         array('comments', 'class' => 'Comment', 'foreign_key' => 'comment_post_ID',
             'conditions' => array('comment_parent = ?', array('0'))),
         array('meta', 'class' => 'PostMeta', 'foreign_key' => 'post_id')
+    );
+    
+    static $has_one = array(
+        array('thumbmeta', 'class' => 'PostThumbMeta', 'foreign_key' => 'post_id',
+                    'conditions' => array('meta_key = ?', '_thumbnail_id'))
     );
     
     public function tags()
@@ -77,6 +84,11 @@ class Post extends swpMVCBaseModel
         );
     }
     
+    public function thumbnail_url()
+    {
+        return ($this->thumbmeta and $this->thumbmeta->thumbnail) ? $this->thumbmeta->thumbnail->guid : '';
+    }
+    
 }
 
 class PostMeta extends swpMVCBaseModel
@@ -90,6 +102,15 @@ class PostMeta extends swpMVCBaseModel
     static $belongs_to = array(
                 array('post', 'foreign_key' => 'post_id', 'class_name' => 'Post'),
             );
+}
+
+class PostThumbMeta extends PostMeta
+{
+    public static $primary_key = 'meta_value';
+    
+    public static $has_one = array(
+        array('thumbnail', 'class' => 'Post', 'foreign_key' => 'ID')  
+    );
 }
 
 class Comment extends swpMVCBaseModel
