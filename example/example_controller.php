@@ -60,13 +60,13 @@ class swpMVC_Example_Controller extends swpMVCBaseController
     {
         get_header();
         $posts = Post::all(array('limit' => 50, 'include' =>
-                            array('post_thumb_meta' => array('thumb_post')),
+                            array('thumbmeta' => array('thumbnail')),
                             'order' => 'post_date DESC'));
         $self = $this;
         _::each($posts, function($post) use ($self) {
-            if (!$post->thumb_url()) return;
+            if (!$post->thumbnail_url()) return;
             echo $post->render($self->template('thumb'))
-                ->replace('image_src', $post->thumb_url())->replace('permalink', get_permalink($post->id));
+                ->replace('image_src', $post->thumbnail_url())->replace('permalink', get_permalink($post->id));
         });
         get_footer();
     }
