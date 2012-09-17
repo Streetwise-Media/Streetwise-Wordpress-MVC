@@ -34,6 +34,7 @@ class swpMVC_Example
     
     private function require_dependencies()
     {
+        require_once(dirname(__FILE__).'/models/example_model.php');
         require_once(dirname(__FILE__).'/example_controller.php');
     }
     
@@ -68,6 +69,8 @@ class swpMVC_Example
                         'route' => '/recent_thumbs/swpmvc_style');
         $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'render_post_form',
                         'route' => '/post_form/:p');
+        $r[] = array('controller' => 'swpMVC_Example_Controller', 'method' => 'test_validations',
+                        'route' => '/test_validations');
         $s =  array_merge($routes, $r);
         return $s;
     }

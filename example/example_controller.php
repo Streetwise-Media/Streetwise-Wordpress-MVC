@@ -63,11 +63,32 @@ class swpMVC_Example_Controller extends swpMVCBaseController
                             array('thumbmeta' => array('thumbnail')),
                             'order' => 'post_date DESC'));
         $self = $this;
-        _::each($posts, function($post) use ($self) {
+        //$tpl_arr = array('thumb', 'post_thumbs_2');
+        //$tpl = $tpl_arr[array_rand($tpl_arr)];
+        $tpl = 'post_thumbs_2';
+        _::each($posts, function($post) use ($self, $tpl) {
             if (!$post->thumbnail_url()) return;
-            echo $post->render($self->template('thumb'))
+            echo $post->render($self->template($tpl))
                 ->replace('image_src', $post->thumbnail_url())->replace('permalink', get_permalink($post->id));
         });
         get_footer();
+    }
+    
+    public function test_validations()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') return $this->save_test_validations();
+        $this->_scripts = array(
+            array('save_post', get_bloginfo('url').'/wp-content/plugins/example/assets/js/save_post.js', array('jquery'))  
+        );
+        get_header();
+        echo ExampleModel::renderForm($this->template('post_form'), 'new_post');
+        get_footer();
+    }
+    
+    public function save_test_validations()
+    {
+        $post = new ExampleModel($_POST['post']);
+        if (!$post->save()) die(json_encode(array('errors' => $post->formErrors('new_post'))));
+        die('success');
     }
 }
