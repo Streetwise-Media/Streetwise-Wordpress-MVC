@@ -4,6 +4,7 @@ class swpMVCBaseController
 {
     
     public $page_title = "";
+    public $version = "";
     public $_templatedir;
     public $_scripts = array();
     public $_script_localizations = array();
@@ -41,6 +42,7 @@ class swpMVCBaseController
         if (!is_array($this->_scripts)) $this->_scripts = array();
         foreach($this->_scripts as $script)
         {
+	    if (!$script[3] and trim($this->version) !== '') $script[3] = $this->version;
             call_user_func_array('wp_enqueue_script', $script);
         }
     }
@@ -57,6 +59,7 @@ class swpMVCBaseController
     {
         foreach($this->_styles as $style)
         {
+	    if (!$style[3] and trim($this->version) !== '') $style[3] = $this->version;
             call_user_func_array('wp_enqueue_style', $style);
         }
     }
