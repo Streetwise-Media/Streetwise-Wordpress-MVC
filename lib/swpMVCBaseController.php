@@ -73,6 +73,27 @@ class swpMVCBaseController
         exit;
     }
     
+    public function noindex()
+    {
+        add_action('wp_head', array($this, 'noindex_tag'));
+    }
+    
+    public function noindex_tag()
+    {
+	?><meta name="robots" content="noindex,nofollow" /><?php
+    }
+    
+    public function nocache()
+    {
+	header("Cache-Control: " .
+           "private, no-cache, no-cache=Set-Cookie, proxy-revalidate");
+    }
+    
+    public function isPost()
+    {
+	return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+    
     public static function link($controller, $method, $params=array())
     {
         $routes = swpMVCCore::instance()->router->routes;

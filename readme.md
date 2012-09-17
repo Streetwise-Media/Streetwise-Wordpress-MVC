@@ -623,6 +623,18 @@ In this method, if no slug was passed to the controller method, we return a 404.
 using the provided slug. If we cannot, we return a 404. Only at that point if we have found a post using the provided slug do we
 begin to generate output from the controller method.
 
+###$this->isPost()
+
+Returns true if the request method is a POST, false otherwise.
+
+###$this->noindex()
+
+Adds a noindex nofollow tag to the header. Must be called before get\_header()
+
+###$this->nocache
+
+Adds Cache-Control headers to prevent page from being cached. Must be called before any output is sent.
+
 ###self::link()
 
 This method accepts three arguments, a controller class name, a method name, and an optional array of parameters. It will then
