@@ -42,6 +42,24 @@ are loaded when you add the routes to the system.
 swpMVC follows a routing structure that more closely resembles Sinatra or Express than WordPress'
 rewrite rules. See the next section for syntax.
 
+###swpmvc_request_override
+
+This action is fired before swpMVC performs a template redirect. If you want to override a request
+based on your own conditions (bypassing the swpMVC router,) you can use this action to do so. The
+below code will route to the post\_three method of the PostController class when post id is three:
+
+    <?php
+    
+    function override_swpmvc_request()
+    {
+        global $post, $wp_query;
+        if ($post->ID !== 3) return;
+        $wp_query->query_vars['swpmvc_controller'] = 'PostController';
+        $wp_query->query_vars['swpmvc_method'] = 'post_three';
+    }
+    
+    do_action('swpmvc_request_override', 'override_swpmvc_request');
+
 
 ##Router
 

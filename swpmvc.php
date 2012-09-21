@@ -94,6 +94,7 @@ class swpMVCCore
     
     public function template_include($template)
     {
+        do_action('swpmvc_request_override');
         global $wp_query;
         if (!$this->is_swpmvc_request()) return $template;
         $c = $wp_query->query_vars['swpmvc_controller'];
