@@ -76,6 +76,18 @@ class Post extends swpMVCBaseModel
         return apply_filters('the_content', $this->post_content);
     }
     
+    public function render_permalink()
+    {
+        return ($this->permalink) ? $this->permalink : get_permalink($this->id);
+    }
+    
+    public function renderers()
+    {
+        return array(
+            'permalink' => array('render_permalink', array())  
+        );
+    }
+    
     public static function controls()
     {
         return array(
@@ -87,6 +99,21 @@ class Post extends swpMVCBaseModel
     public function thumbnail_url()
     {
         return ($this->thumbmeta and $this->thumbmeta->thumbnail) ? $this->thumbmeta->thumbnail->guid : '';
+    }
+    
+    public static function attach_permalinks(array $posts)
+    {
+        $ids = _::map($posts, function($p) { return $post->id; });
+        $wp_posts = get_posts($ids);
+        $r = array();
+        foreach($wp_posts as $post)
+        {
+            $mp = _::find($posts, function($p) use($post) { return $p->id === $post->ID; });
+            unset($post->filter);
+            $mp->permalink = get_permalink($post);
+            $r[] = $mp;
+        }
+        return $r;
     }
     
 }
