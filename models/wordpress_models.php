@@ -103,8 +103,9 @@ class Post extends swpMVCBaseModel
     
     public static function attach_permalinks(array $posts)
     {
-        $ids = _::map($posts, function($p) { return $post->id; });
-        $wp_posts = get_posts($ids);
+        $ids = _::map($posts, function($p) { return $p->id; });
+        $types = _::uniq(_::map($posts, function($p) { return $p->post_type; }));
+        $wp_posts = get_posts(array('include' => $ids, 'post_type'=> $types));
         $r = array();
         foreach($wp_posts as $post)
         {
