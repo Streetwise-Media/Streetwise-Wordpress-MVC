@@ -13,11 +13,12 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $value;
     }
     
-    public function render(Stamp $tpl)
+    public function render(swpMVCStamp $tpl)
     {
         $output = $tpl;
         foreach($this->attributes() as $key => $val)
         {
+            if (!$tpl->hasSlot($key)) continue;
             $render_method = 'render_'.$key;
             $value = (method_exists($this, $render_method) and is_callable(array($this, $render_method)))
                 ? $this->$render_method() : $this->$key;
@@ -27,6 +28,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         if (method_exists($this, 'renderers') and is_callable(array($this, 'renderers')) and is_array($this->renderers()))
             foreach($this->renderers() as $key => $func_array)
             {
+                if (!$tpl->hasSlot($key)) continue;
                 if (!is_array($func_array) or count($func_array) < 2 or
                         !method_exists($this, $func_array[0]) or !is_callable(array($this, $func_array[0])) or
                             !is_array($func_array[1])) continue;
@@ -41,6 +43,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
             $this->_form_helper = new swFormHelper($class);
         foreach($controls as $prop => $control)
         {
+            if (!$tpl->hasSlot('control_label_'.$prop) and !$tpl->hasSlot('control_'.$prop)) continue;
             if (!$class::validate_control($prop, $control)) continue;
             if (isset($control['label']))
                 $output = $output->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control));

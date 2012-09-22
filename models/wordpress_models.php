@@ -36,6 +36,9 @@ class TermTaxonomy extends swpMVCBaseModel
 
 class Post extends swpMVCBaseModel
 {
+    
+    public $permalink;
+    
     public static function tablename()
     {
         global $wpdb;

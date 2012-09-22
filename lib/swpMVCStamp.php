@@ -14,7 +14,7 @@
  * with this source code in the file license.txt.
  *
  */
-class Stamp {
+class swpMVCStamp {
 
 	/**
 	 * @var string
@@ -187,7 +187,7 @@ class Stamp {
 	 */
 	public function copy($id) {
 		$snip = $this->find($id);
-		return new Stamp( $snip["copy"] );
+		return new swpMVCStamp( $snip["copy"] );
 	}
 
 	/**
@@ -246,6 +246,17 @@ class Stamp {
 	 */
 	public function hasSimpleSlot($slotID) {
 		if (strpos($this->tpl,"#".$slotID."#")!==false) return true; else return false;
+	}
+	
+	/**
+	 * Checks if the template contains slot Slot ID.
+	 *
+	 * @param  string $slotID slot ID
+	 *
+	 * @return bool $containsSlot result of check
+	 */
+	public function hasSlot($slotID) {
+		if (strpos($this->tpl,"<!-- ".$slotID." --><!-- /".$slotID." -->")!==false) return true; else return false;
 	}
 
 
@@ -347,7 +358,7 @@ class Stamp {
 	 * @return Stamp $chainable Chainable
 	 */
 	public function extendWith($childString) {
-        	$child = new Stamp($childString);
+        	$child = new swpMVCStamp($childString);
         	$parent = $this;
         	foreach($child->getMarkersList() as $marker) {
             		$copyInChild = $child->copy($marker);

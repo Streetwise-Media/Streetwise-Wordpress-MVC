@@ -33,8 +33,8 @@ class swpMVCBaseController
     public function template($name)
     {
         if (!$this->_templatedir and $this->logError('No controller template directory defined for template '.$name))
-                return new Stamp('No controller template directory defined');
-        return new Stamp(Stamp::load($this->_templatedir.$name.'.tpl'));
+                return new swpMVCStamp('No controller template directory defined');
+        return new swpMVCStamp(swpMVCStamp::load($this->_templatedir.$name.'.tpl'));
     }
     
     public function enqueue_scripts()
