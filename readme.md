@@ -131,7 +131,7 @@ the slug when a single post is viewed
         global $wp_query, $post;
         $wp_query->query_vars['swpmvc_controller'] = 'PostController';
         $wp_query->query_vars['swpmvc_method'] = 'single_post';
-        $wp_query->query_vars['swpmvc_params'] = array($post_name);
+        $wp_query->query_vars['swpmvc_params'] = array($post->post_name);
     }
     
     //PostController.php
