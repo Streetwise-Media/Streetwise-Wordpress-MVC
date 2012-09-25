@@ -113,6 +113,36 @@ directory
             $s =  array_merge($routes, $r);
             return $s;
         }
+        
+###Overriding the router
+
+Sometimes you may want to override a default route provided by WordPress. In this case, you can use the
+swpmvc\_request\_override action hook to manually set the necessary query vars that will redirect to your
+desired controller method. The following example will call the PostController::single_post method passing in
+the slug when a single post is viewed
+
+    //plugin.php
+    
+    add_action('swpmvc_request_override', 'override_request');
+    
+    function override_request()
+    {
+        if (!is_single()) return;
+        global $wp_query, $post;
+        $wp_query->query_vars['swpmvc_controller'] = 'PostController';
+        $wp_query->query_vars['swpmvc_method'] = 'single_post';
+        $wp_query->query_vars['swpmvc_params'] = array($post_name);
+    }
+    
+    //PostController.php
+    
+    class PostController.php extends swpMVCBaseController
+    {
+        public function single_post($slug)
+        {
+            //retreive post model by slug and do something with it.
+        }
+    }
 
 
 ##Models
