@@ -240,3 +240,15 @@ class UserMeta extends swpMVCBaseModel
                 array('user', 'foreign_key' => 'user_id', 'class_name' => 'User'),
             );
 }
+
+class WPOptions extends swpMVCBaseModel
+{
+    public static function tablename()
+    {
+        global $wpdb;
+        return $wpdb->prefix.'options';
+    }
+    
+    static $primary_key = 'option_id';
+
+}
