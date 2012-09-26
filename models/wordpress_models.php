@@ -74,7 +74,7 @@ class Post extends swpMVCBaseModel
         return _::map($cat_terms, function($term) { return $term->termtaxonomy->term; });
     }
 
-    public function custom_terms($tax_type=='post_tag')
+    public function terms($tax_type=='post_tag')
     {
         $custom_terms = _::filter($this->postterms, function($term) { return $term->termtaxonomy->taxonomy === $tax_type; });
         return _::map($custom_terms, function($term) { return $term->termtaxonomy->term; });
