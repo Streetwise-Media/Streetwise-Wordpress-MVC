@@ -32,7 +32,7 @@ class swpMVCCore
     {
         add_action('plugins_loaded', array($this, 'swp_mvc_init'), 10);
         add_action('plugins_loaded', array($this, 'swp_mvc_ready'), 15);
-        add_action('plugins_loaded', array($this, 'flush_rewrite_if_needed'), 20);
+        add_action('wp_loaded', array($this, 'flush_rewrite_if_needed'), 20);
         add_filter('query_vars', array($this, 'add_query_vars'));
         add_filter('rewrite_rules_array', array($this, 'add_rewrite_rules'));
         add_filter('template_include', array($this, 'template_include'));
