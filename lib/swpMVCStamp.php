@@ -256,7 +256,8 @@ class swpMVCStamp {
 	 * @return bool $containsSlot result of check
 	 */
 	public function hasSlot($slotID) {
-		if (strpos($this->tpl,"<!-- ".$slotID." --><!-- /".$slotID." -->")!==false) return true; else return false;
+		$slot = $this->find($slotID);
+		return (isset($slot['begin']) and $slot['begin'] > 0);
 	}
 
 
