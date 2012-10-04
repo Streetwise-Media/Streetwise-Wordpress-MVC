@@ -1168,7 +1168,8 @@ class Model
 			// is a normal field on the table
 			if (array_key_exists($name,$table->columns))
 			{
-				$value = $table->columns[$name]->cast($value,$connection);
+				if (!method_exists($this, 'set_'.$name))
+                                    $value = $table->columns[$name]->cast($value,$connection);
 				$name = $table->columns[$name]->inflected_name;
 			}
 

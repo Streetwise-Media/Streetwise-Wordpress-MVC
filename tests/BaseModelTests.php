@@ -76,6 +76,22 @@ class UserMeta extends swpMVCBaseModel
 }
 */
 
+class TestSetterPost extends Post
+{
+    public function set_post_title($title)
+    {
+        $this->assign_attribute('post_title', 'wacka '.$title);
+    }
+}
+
+class TestCastingSetterPost extends Post
+{
+    public function set_post_title($title)
+    {
+        $this->assign_attribute('post_title', 'wacka '.$title[0]);
+    }
+}
+
 class BaseModelTestUtilities
 {
 
@@ -117,12 +133,16 @@ class BaseModelTests extends \Enhance\TestFixture
         }
     }
     
-    public function test_reduce_to_build_output()
+    public function test_activerecord_constructor_uses_dynamic_setters()
     {
-        return;
-        $words = array('this ', 'is ', 'the ', 'string ');
-        $out = _::reduce($words, function($memo, $str) { return $memo.$str; }, '');
-        $this->utility->dump($out);
+        $post = new TestSetterPost(array('post_title' => 'test'));
+        \Enhance\Assert::areIdentical('wacka test', $post->post_title);
+    }
+    
+    public function test_casting_does_not_interfere_with_dynamic_setters_during_mass_assignment()
+    {
+        $post = new TestCastingSetterPost(array('post_title' => array('test')));
+        \Enhance\Assert::areIdentical('wacka test', $post->post_title);
     }
     
 }
