@@ -65,7 +65,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $value === false or empty($value) or trim($value) === '';
     }
     
-    public static function renderForm(Stamp $output, $prefix = false)
+    public static function renderForm(swpMVCStamp $output, $prefix = false)
     {
         $class = get_called_class();
         $p = $prefix or $class;
