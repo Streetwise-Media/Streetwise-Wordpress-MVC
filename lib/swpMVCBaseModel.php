@@ -4,12 +4,12 @@ class swpMVCBaseModel extends ActiveRecord\Model
 {
     private $_meta;
     private $_form_helper;
-    private $_finder;
+    private static $_finder;
     
     public static function build_find($args)
     {
-        if (!$this->_finder) $this->_finder = new swpMVCFinder();
-        return $this->_finder->find($args);
+        if (!self::$_finder) self::$_finder = new swpMVCFinder();
+        return self::$_finder->find($args);
     }
     
     public function &read_attribute($attr)
