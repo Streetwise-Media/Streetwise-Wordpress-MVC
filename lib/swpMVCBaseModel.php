@@ -4,6 +4,13 @@ class swpMVCBaseModel extends ActiveRecord\Model
 {
     private $_meta;
     private $_form_helper;
+    private $_finder;
+    
+    public static function build_find($args)
+    {
+        if (!$this->_finder) $this->_finder = new swpMVCFinder();
+        return $this->_finder->find($args);
+    }
     
     public function &read_attribute($attr)
     {
@@ -155,12 +162,12 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $this->_meta;
     }
     
-    public function meta($key=false, $raw=false)
+    public function meta($key=false, $raw=false, $single=false)
     {
         if ($key and $raw) return _::filter($this->meta, function($m) use ($key) { return $m->meta_key === $key; });
         if (!$key) return $this->load_meta();
         $meta = $this->load_meta();
-        return $meta[$key];
+        return (is_array($meta[$key]) and $single) ? $meta[$key][0] : $meta[$key];
     }
 
     public function logError($msg)
