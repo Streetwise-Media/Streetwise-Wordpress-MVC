@@ -131,14 +131,18 @@ abstract class AbstractRelationship implements InterfaceRelationship
 		$values = array();
 		$options = $this->options;
 		$inflector = Inflector::instance();
+		$qk_table = (isset($options['class']) and
+			$r_table = $options['class'] and is_callable(array($r_table, 'tablename'))) ?
+			$r_table::tablename().'||_||_||' : '';
 		$query_key = $query_keys[0];
+		$query_key_full = $qk_table.$query_key;
 		$model_values_key = (isset($this->options['primary_key'])) ? $this->options['primary_key'] : $model_values_keys[0];
 
 		foreach ($attributes as $column => $value)
 			$values[] = $value[$inflector->variablize($model_values_key)];
 
 		$values = array($values);
-		$conditions = SQLBuilder::create_conditions_from_underscored_string($table->conn,$query_key,$values);
+		$conditions = SQLBuilder::create_conditions_from_underscored_string($table->conn,$query_key_full,$values);
 
 		if (isset($options['conditions']) && strlen($options['conditions'][0]) > 1)
 			Utils::add_condition($options['conditions'], $conditions);

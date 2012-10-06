@@ -200,6 +200,12 @@ class SQLBuilder
 		}
 		return join(',',$parts);
 	}
+	
+	public static function quote_conditions_key_name($name)
+	{
+		$parts = explode('||_||_||', $name);
+		return '`'.$parts[0].'`.`'.$parts[1].'`';
+	}
 
 	/**
 	 * Converts a string like "id_and_name_or_z" into a conditions value like array("id=? AND name=? OR z=?", values, ...).
@@ -215,7 +221,7 @@ class SQLBuilder
 	{
 		if (!$name)
 			return null;
-
+		$name = (stristr($name, '||_||_||')) ? self::quote_conditions_key_name($name) : $name;
 		$parts = preg_split('/(_and_|_or_)/i',$name,-1,PREG_SPLIT_DELIM_CAPTURE);
 		$num_values = count($values);
 		$conditions = array('');
