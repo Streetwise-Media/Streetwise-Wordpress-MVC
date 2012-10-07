@@ -133,7 +133,7 @@ abstract class AbstractRelationship implements InterfaceRelationship
 		$inflector = Inflector::instance();
 		$qk_table = (isset($options['class']) and
 			$r_table = $options['class'] and is_callable(array($r_table, 'tablename'))) ?
-			$r_table::tablename().'||_||_||' : '';
+			$r_table::tablename().'||-||-||' : '';
 		$query_key = $query_keys[0];
 		$query_key_full = $qk_table.$query_key;
 		$model_values_key = (isset($this->options['primary_key'])) ? $this->options['primary_key'] : $model_values_keys[0];
@@ -530,8 +530,9 @@ class HasMany extends AbstractRelationship
 
 			$this->initialized = true;
 		}
-
-		if (!($conditions = $this->create_conditions_from_keys($model, $this->foreign_key, $this->primary_key)))
+		$fk = (is_callable(array($class_name, 'tablename'))) ?
+			array($class_name::tablename().'||-||-||'.$this->foreign_key[0]) : $this->foreign_key;
+		if (!($conditions = $this->create_conditions_from_keys($model, $fk, $this->primary_key)))
 			return null;
 
 		$options = $this->unset_non_finder_options($this->options);
@@ -674,8 +675,10 @@ class BelongsTo extends AbstractRelationship
 
 		foreach ($this->foreign_key as $key)
 			$keys[] = $inflector->variablize($key);
-
-		if (!($conditions = $this->create_conditions_from_keys($model, $this->primary_key, $keys)))
+			
+		$pk = ($fc = $this->options['class'] and is_callable(array($fc, 'tablename'))) ?
+			array($fc::tablename().'||-||-||'.$this->primary_key[0]) : $this->primary_key;
+		if (!($conditions = $this->create_conditions_from_keys($model, $pk, $keys)))
 			return null;
 
 		$options = $this->unset_non_finder_options($this->options);

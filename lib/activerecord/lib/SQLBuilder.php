@@ -203,7 +203,7 @@ class SQLBuilder
 	
 	public static function quote_conditions_key_name($name)
 	{
-		$parts = explode('||_||_||', $name);
+		$parts = explode('||-||-||', $name);
 		return '`'.$parts[0].'`.`'.$parts[1].'`';
 	}
 
@@ -221,7 +221,6 @@ class SQLBuilder
 	{
 		if (!$name)
 			return null;
-		$name = (stristr($name, '||_||_||')) ? self::quote_conditions_key_name($name) : $name;
 		$parts = preg_split('/(_and_|_or_)/i',$name,-1,PREG_SPLIT_DELIM_CAPTURE);
 		$num_values = count($values);
 		$conditions = array('');
@@ -246,7 +245,7 @@ class SQLBuilder
 
 			// map to correct name if $map was supplied
 			$name = $map && isset($map[$parts[$i]]) ? $map[$parts[$i]] : $parts[$i];
-
+			$name = (stristr($name, '||-||-||')) ? self::quote_conditions_key_name($name) : $name;
 			$conditions[0] .= $connection->quote_name($name) . $bind;
 		}
 		return $conditions;

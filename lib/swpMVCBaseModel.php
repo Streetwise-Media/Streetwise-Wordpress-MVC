@@ -45,7 +45,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
             }
         $class = get_called_class();
         if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
-        $controls = $class::controls($this);
+        $controls = $class::controls($this, $tpl);
         if (!isset($this->_form_helper) or !is_object($this->_form_helper))
             $this->_form_helper = new swFormHelper($class);
         foreach($controls as $prop => $control)
@@ -70,7 +70,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $class = get_called_class();
         $p = $prefix or $class;
         if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
-        $controls = $class::controls();
+        $controls = $class::controls(false, $output);
         $form_helper = new swFormHelper($p);
         foreach($controls as $prop => $control)
         {

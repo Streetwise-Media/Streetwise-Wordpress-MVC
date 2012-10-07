@@ -118,6 +118,21 @@ class swpMVCStamp {
 		return $keys;
 	}
 	
+	public function check($id, $nextPos = 0) {
+        if($nextPos >= strlen($this->tpl)) return array();
+		$fid = "<!-- ".$id." -->";
+		$fidEnd = "<!-- /".$id." -->";
+		$len = strlen($fid);
+		$begin = strpos($this->tpl, $fid, $nextPos);
+		$padBegin = $begin + $len;
+		$rest = substr($this->tpl, $padBegin);
+		$end = strpos($rest, $fidEnd);
+		$padEnd = $end + strlen($fidEnd);
+		$stamp = substr($rest, 0, $end);
+		$keys = array( "begin"=>$begin, "padBegin"=>$padBegin, "end"=>$end, "padEnd"=>$padEnd, "copy"=>$stamp );
+		return $keys;
+	}
+	
 	
 	/**
 	 * Automatically scans template and cuts out all regions prefixed
@@ -256,7 +271,7 @@ class swpMVCStamp {
 	 * @return bool $containsSlot result of check
 	 */
 	public function hasSlot($slotID) {
-		$slot = $this->find($slotID);
+		$slot = $this->check($slotID);
 		return (isset($slot['begin']) and $slot['begin'] > 0);
 	}
 
