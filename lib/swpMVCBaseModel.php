@@ -60,6 +60,27 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $output;
     }
     
+    public static function dump_render_tags()
+    {
+        $class = get_called_class();
+        $m = new $class();
+        foreach($m->attributes() as $k => $v)
+        {
+            echo htmlentities("<!-- $k --><!-- /$k -->")."<br />";
+        }
+        if (method_exists($class, 'renderers') and is_callable(array($class, 'renderers')))
+        foreach($class::renderers() as $k => $v)
+        {
+            echo htmlentities("<!-- $k --><!-- /$k -->").'<br />';
+        }
+        if (method_exists($class, 'controls') and is_callable(array($class, 'controls')))
+        foreach($class::controls(false, false, true) as $k => $v)
+        {
+            if ($v['label']) echo htmlentities("<!-- control_label_$k --><!-- /control_label_$k -->")."<br />";
+            echo htmlentities("<!-- control_$k --><!-- /control_$k -->").'<br />';
+        }
+    }
+    
     public function needs_template_cleanup($key, $value)
     {
         return $value === false or empty($value) or trim($value) === '';
