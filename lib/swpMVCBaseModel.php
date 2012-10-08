@@ -103,12 +103,12 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $output;
     }
     
-    public function formErrors($prefix=false)
+    public function formErrors($prefix=false, $headless_messages=false)
     {
-        $errors = $this->errors->to_array();
+        $errors = $this->errors->to_array(null, $headless_messages);
         $class = get_called_class();
         if (!is_callable(array($class, 'controls'))) return $errors;
-        $controls = $class::controls();
+        $controls = $class::controls(false, false, true);
         $r = array();
         $p = $prefix ?: $class;
         foreach($errors as $key => $error)

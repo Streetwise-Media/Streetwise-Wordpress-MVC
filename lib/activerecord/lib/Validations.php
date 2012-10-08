@@ -816,7 +816,7 @@ class Errors implements IteratorAggregate
 	 *                       and is called for each available error message.
 	 * @return array
 	 */
-	public function to_array($closure=null)
+	public function to_array($closure=null, $headless_messages)
 	{
 		$errors = array();
 
@@ -829,7 +829,10 @@ class Errors implements IteratorAggregate
 					if (is_null($msg))
 						continue;
 
-					$errors[$attribute][] = ($message = Utils::human_attribute($attribute) . ' ' . $msg);
+					$errors[$attribute][] =
+						($headless_messages) ?
+							$msg : 
+							Utils::human_attribute($attribute) . ' ' . $msg;
 
 					if ($closure)
 						$closure($attribute,$message);
