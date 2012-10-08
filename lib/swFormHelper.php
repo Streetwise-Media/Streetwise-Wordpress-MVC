@@ -33,7 +33,7 @@ class swFormHelper
             name='{$this->_prefix}[$key]' id='$nid' $multiple>";
         foreach($control['options'] as $text => $val)
         {
-            $selected = ((is_array($value) and in_array($val, $value)) or $val == $value) ? "selected='selected'" : '';
+            $selected = ($value !== false and ((is_array($value) and in_array($val, $value)) or $val == $value)) ? "selected='selected'" : '';
             $select .= "<option value='$val' $selected>$text</option>";
         }
         $select .= "</select>";
