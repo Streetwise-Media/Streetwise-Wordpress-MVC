@@ -84,10 +84,16 @@ class Post extends swpMVCBaseModel
         return ($this->permalink) ? $this->permalink : get_permalink($this->id);
     }
     
+    public function render_post_author()
+    {
+        return $this->user->display_name;
+    }
+    
     public function renderers()
     {
         return array(
-            'permalink' => array('render_permalink', array())  
+            'permalink' => array('render_permalink', array()),
+            'post_thumb_url' => array('thumbnail_url', array())
         );
     }
     

@@ -6,10 +6,10 @@ class swpMVCBaseModel extends ActiveRecord\Model
     private $_form_helper;
     private static $_finder;
     
-    public static function build_find($args)
+    public static function build_find($args, $bind_operator='AND')
     {
         if (!self::$_finder) self::$_finder = new swpMVCFinder();
-        return self::$_finder->find($args);
+        return self::$_finder->find($args, $bind_operator);
     }
     
     public function &read_attribute($attr)
@@ -54,8 +54,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
             if (!$class::validate_control($prop, $control)) continue;
             if (isset($control['label']))
                 $output = $output->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control));
-            $control_val = (is_string($this->$prop)) ? htmlentities($this->$prop) : $this->$prop;
-            $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $control_val));
+            $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $this->$prop));
         }
         return $output;
     }

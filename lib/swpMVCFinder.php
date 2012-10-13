@@ -2,7 +2,7 @@
 
 class swpMVCFinder
 {
-    public function find($args)
+    public function find($args, $bind_operator = 'AND')
     {
         $vals = array();
         $qstring = array();
@@ -12,7 +12,7 @@ class swpMVCFinder
             $qstring[] = $op->qstring();
             $vals = $op->add_values($vals);
         }
-        array_unshift($vals, join(' AND ', $qstring));
+        array_unshift($vals, join(' '.$bind_operator.' ', $qstring));
         return $vals;
     }
 
