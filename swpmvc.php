@@ -63,6 +63,7 @@ class swpMVCCore
     
     public function swp_mvc_init()
     {
+        do_action('swp_mvc_preload');
         do_action('swp_mvc_init');
     }
     
