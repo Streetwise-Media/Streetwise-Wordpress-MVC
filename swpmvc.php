@@ -100,7 +100,6 @@ class swpMVCCore
         if (!$this->is_swpmvc_request()) return $template;
         $c = $wp_query->query_vars['swpmvc_controller'];
         $m = $wp_query->query_vars['swpmvc_method'];
-        if (!class_exists($c) or !method_exists($c, $m) or !is_callable($c, $m)) return $template;
         $wp_query->is_home = false;
         return dirname(__FILE__).'/swpMVCDispatcher.php';
     }

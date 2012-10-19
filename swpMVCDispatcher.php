@@ -16,10 +16,18 @@ class swpMVCDispatcher
         $m = $wp_query->query_vars['swpmvc_method'];
         $p = $wp_query->query_vars['swpmvc_params'];
         if (!is_array($p)) $p = array();
+        if (!class_exists($c)) return self::set404();
         $co = new $c();
+        if (!self::can_call($co, $m)) return self::set404();
         if (self::can_call($co, 'before')) $co->before();
         call_user_func_array(array($co, $m), $p);
         if (self::can_call($co, 'after')) $co->after();
+    }
+    
+    public static function set404()
+    {
+        $c = new swpMVCBaseController();
+        $c->set404();
     }
 }
 
