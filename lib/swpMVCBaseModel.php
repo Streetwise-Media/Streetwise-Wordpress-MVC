@@ -5,6 +5,9 @@ class swpMVCBaseModel extends ActiveRecord\Model
     private $_meta;
     private $_form_helper;
     private static $_finder;
+    private $_renderer;
+    private $_controls_renderer;
+    private $_role;
     
     public static function build_find($args, $bind_operator='AND')
     {
@@ -20,43 +23,105 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $value;
     }
     
-    public function render(swpMVCStamp $tpl)
+    public function inject_role(swpMVCBaseRole $role)
     {
-        $output = $tpl;
+        $this->_role = $role;
+    }
+    
+    public function inject_renderer(swpMVCBaseRenderer $renderer)
+    {
+        $this->_renderer = $renderer;
+    }
+    
+    public function inject_controls_renderer(swpMVCBaseControlsRenderer $controls_renderer)
+    {
+        $this->_controls_renderer = $controls_renderer;
+    }
+    
+    private function use_renderer_to_populate_template(swpMVCStamp $output)
+    {
+        if (!$this->_renderer) return $output;
+        $methods = get_class_methods($this->_renderer);
+        foreach($methods as $method)
+        {
+            if (!is_callable(array($this->_renderer, $method)) or
+                (!$output->hasSlot($method) and !$output->hasSlot($method.'_block'))) continue;
+            $output = $output->replace($method, $this->_renderer->$method());
+            if (!$this->_renderer->$method())
+                $output = $output->replace($method.'_block', '');
+        }
+        return $output;
+    }
+    
+    private function use_model_attributes_to_populate_template(swpMVCStamp $output)
+    {
         foreach($this->attributes() as $key => $val)
         {
-            if (!$tpl->hasSlot($key)) continue;
+            if (!$output->hasSlot($key)) continue;
             $render_method = 'render_'.$key;
             $value = (method_exists($this, $render_method) and is_callable(array($this, $render_method)))
                 ? $this->$render_method() : $this->$key;
             $output = $output->replace($key, $value);
             if ($this->needs_template_cleanup($key, $value)) $output = $output->replace($key.'_block', '');
         }
-        if (method_exists($this, 'renderers') and is_callable(array($this, 'renderers')) and is_array($this->renderers()))
-            foreach($this->renderers() as $key => $func_array)
-            {
-                if (!$tpl->hasSlot($key)) continue;
-                if (!is_array($func_array) or count($func_array) < 2 or
-                        !method_exists($this, $func_array[0]) or !is_callable(array($this, $func_array[0])) or
-                            !is_array($func_array[1])) continue;
-                $r = call_user_func_array(array($this, $func_array[0]), $func_array[1]);
-                $output = $output->replace($key, $r);
-                if ($this->needs_template_cleanup($key, $r)) $output = $output->replace($key.'_block', '');
-            }
+        return $output;
+    }
+    
+    public function use_class_renderer_method_to_populate_template(swpMVCStamp $output)
+    {
+        if (!method_exists($this, 'renderers') or !is_callable(array($this, 'renderers'))
+            or !is_array($this->renderers()))
+                return $output;
+        foreach($this->renderers() as $key => $func_array)
+        {
+            if (!$output->hasSlot($key)) continue;
+            if (!is_array($func_array) or count($func_array) < 2 or
+                    !method_exists($this, $func_array[0]) or !is_callable(array($this, $func_array[0])) or
+                        !is_array($func_array[1])) continue;
+            $r = call_user_func_array(array($this, $func_array[0]), $func_array[1]);
+            $output = $output->replace($key, $r);
+            if ($this->needs_template_cleanup($key, $r)) $output = $output->replace($key.'_block', '');
+        }
+        return $output;   
+    }
+    
+    public function render(swpMVCStamp $tpl)
+    {
+        $output = $tpl;
+        $output = $this->use_renderer_to_populate_template($output);
+        $output = $this->use_class_renderer_method_to_populate_template($output);
+        $output = $this->use_model_attributes_to_populate_template($output);
+        return $this->render_controls($output);
+    }
+    
+    private function render_controls($output)
+    {
         $class = get_called_class();
-        if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
-        $controls = $class::controls($this, $tpl);
         if (!isset($this->_form_helper) or !is_object($this->_form_helper))
             $this->_form_helper = new swFormHelper($class);
+        if ($this->_controls_renderer and $methods = $this->_controls_renderer->methods())
+            foreach($methods as $method)
+                if (is_object($val = $this->_controls_renderer->$method())
+                    and get_class($val) === 'swpMVCModelControl' and $val->is_valid())
+                        $output = $this->process_control($method, $val->to_array(), $output);
+        if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
+        $controls = $class::controls($this, $output);
         foreach($controls as $prop => $control)
-        {
-            if (!$tpl->hasSlot('control_label_'.$prop) and !$tpl->hasSlot('control_'.$prop)) continue;
-            if (!$class::validate_control($prop, $control)) continue;
-            if (isset($control['label']))
-                $output = $output->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control));
-            $output = $output->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $this->$prop));
-        }
+            $output = $this->process_control($prop, $control, $output);
         return $output;
+    }
+    
+    private function process_control($prop, $control, swpMVCStamp $tpl)
+    {
+        $class = get_called_class();
+        if (!$tpl->hasSlot('control_label_'.$prop) and !$tpl->hasSlot('control_'.$prop)) return $tpl;
+        if (!$class::validate_control($prop, $control)) return $tpl;
+        if (isset($control['label']))
+            $tpl = $tpl->replace('control_label_'.$prop, $this->_form_helper->label($prop, $control));
+        $val = (isset($control['value']) and $control['value']) ?
+            $control['value'] : $this->$prop;
+        $tpl = $tpl->replace('control_'.$prop, $this->_form_helper->$control['type']($prop, $control, $val));
+        return $tpl;
     }
     
     public static function dump_render_tags()
@@ -195,5 +260,28 @@ class swpMVCBaseModel extends ActiveRecord\Model
         trigger_error($msg, E_USER_WARNING);
         Console::error($msg);
         return true;
+    }
+    
+    public function __get($name)
+    {
+        $getter = 'get_'.$name;
+        if ($this->_role and is_callable(array($this->_role, $getter)))
+            return $this->_role->$getter();
+        return parent::__get($name);
+    }
+    
+    public function __set($name, $value)
+    {
+        $setter = 'set_'.$name;
+        if ($this->_role and is_callable(array($this->_role, $setter)))
+            return $this->_role->$setter($value);
+        return parent::__set($name, $value);
+    }
+    
+    public function __call($name, $args)
+    {
+        if ($this->_role and is_callable(array($this->_role, $name)))
+            return call_user_func_array(array($this->_role, $name), $args);
+        return parent::__call($name, $args);
     }
 }

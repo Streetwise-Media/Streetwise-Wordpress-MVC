@@ -84,6 +84,11 @@ class TestSetterPost extends Post
     }
 }
 
+class MetalessPost extends Post
+{
+    public static $has_many = array();
+}
+
 class TestCastingSetterPost extends Post
 {
     public function set_post_title($title)
@@ -143,6 +148,12 @@ class BaseModelTests extends \Enhance\TestFixture
     {
         $post = new TestCastingSetterPost(array('post_title' => array('test')));
         \Enhance\Assert::areIdentical('wacka test', $post->post_title);
+    }
+    
+    public function test_late_addition_of_relationships_works()
+    {
+        MetalessPost::$has_many[] = array('meta', 'class' => 'PostMeta', 'foreign_key' => 'post_id');
+        $post = MetalessPost::first(array('include' => array('meta')));
     }
     
 }

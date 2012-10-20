@@ -46,6 +46,7 @@ class swpMVCCore
         $this->load_activerecord($dir);
         require_once(dirname(__FILE__).'/profiler/swpMVCProfiler.php');
         if (!class_exists('_')) require_once($dir.'lib/underscore.php');
+        require_once(dirname(__FILE__).'/lib/swpMVCBaseModelExtender.php');
         foreach (glob($dir.'lib/*.php') as $filename)
             if (!class_exists(str_replace('.php', '', basename($filename)))) require_once($filename);
         require_once($dir.'models/wordpress_models.php');
