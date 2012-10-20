@@ -47,7 +47,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
             if (!is_callable(array($this->_renderer, $method)) or
                 (!$output->hasSlot($method) and !$output->hasSlot($method.'_block'))) continue;
             $output = $output->replace($method, $this->_renderer->$method());
-            if (!$this->_renderer->$method())
+            if (!$this->_renderer->$method() or $this->needs_template_cleanup($method, $this->_renderer->$method()))
                 $output = $output->replace($method.'_block', '');
         }
         return $output;
