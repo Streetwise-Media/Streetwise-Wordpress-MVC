@@ -8,6 +8,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
     private $_renderer;
     private $_controls_renderer;
     private $_role;
+    private $_validator;
     
     public static function build_find($args, $bind_operator='AND')
     {
@@ -33,9 +34,14 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $this->_renderer = $renderer;
     }
     
-    public function inject_controls_renderer(swpMVCBaseControlsRenderer $controls_renderer)
+    public function inject_controls_renderer(swpMVCBaseControlRenderer $controls_renderer)
     {
         $this->_controls_renderer = $controls_renderer;
+    }
+    
+    public function inject_validator(swpMVCBaseValidator $validator)
+    {
+        $this->_validator = $validator;
     }
     
     private function use_renderer_to_populate_template(swpMVCStamp $output)
@@ -101,7 +107,8 @@ class swpMVCBaseModel extends ActiveRecord\Model
             $this->_form_helper = new swFormHelper($class);
         if ($this->_controls_renderer and $methods = $this->_controls_renderer->methods())
             foreach($methods as $method)
-                if (is_object($val = $this->_controls_renderer->$method())
+                if (($output->hasSlot('control_label_'.$method) or $output->hasSlot('control_'.$method)) and
+                    is_object($val = $this->_controls_renderer->$method())
                     and get_class($val) === 'swpMVCModelControl' and $val->is_valid())
                         $output = $this->process_control($method, $val->to_array(), $output);
         if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
@@ -150,12 +157,16 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $value === false or empty($value) or trim($value) === '';
     }
     
-    public static function renderForm(swpMVCStamp $output, $prefix = false)
+    public static function renderForm(swpMVCStamp $output, $prefix = false, $control_renderer=false)
     {
         $class = get_called_class();
         $p = $prefix or $class;
-        if (!method_exists($class, 'controls') or !is_callable(array($class, 'controls'))) return $output;
-        $controls = $class::controls(false, $output);
+        $controls = (method_exists($class, 'controls') and is_callable(array($class, 'controls'))) ?
+            $class::controls(false, $output) : array();
+        if ($control_renderer and is_subclass_of($control_renderer, 'swpMVCBaseControlRenderer'))
+            foreach($control_renderer->methods() as $method)
+                if (is_callable(array($control_renderer->$method(), 'to_array')))
+                    $controls[$method] = $control_renderer->$method()->to_array();
         $form_helper = new swFormHelper($p);
         foreach($controls as $prop => $control)
         {
@@ -171,14 +182,18 @@ class swpMVCBaseModel extends ActiveRecord\Model
     {
         $errors = $this->errors->to_array(null, $headless_messages);
         $class = get_called_class();
-        if (!is_callable(array($class, 'controls'))) return $errors;
-        $controls = $class::controls(false, false, true);
+        $controls = method_exists($class, 'controls') and is_callable(array($class, 'controls')) ?
+            $class::controls(false, false, true) : array();
         $r = array();
         $p = $prefix ?: $class;
         foreach($errors as $key => $error)
         {
+            $type = ($this->_controls_renderer and is_callable(array($this->_controls_renderer, $key))
+                     and is_callable(array($this->_controls_renderer->$key(), 'is_valid')) and
+                     $this->_controls_renderer->$key()->is_valid()) ?
+                        $this->_controls_renderer->$key()->type : $controls[$key]['type'];
             $r[] = array('value' => $key, 'errors' => $error,
-                         'control' => $p.'_'.$key.'_'.$controls[$key]['type']);
+                         'control' => $p.'_'.$key.'_'.$type);
         }
         return $r;
     }
@@ -210,6 +225,12 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return true;
     }
     
+    public function validate()
+    {
+        if ($this->_validator)
+            foreach($this->_validator->methods() as $method)
+                $this->_validator->$method();
+    }
     
     public function hydrate_meta($k, $v)
     {
@@ -249,7 +270,8 @@ class swpMVCBaseModel extends ActiveRecord\Model
     
     public function meta($key=false, $raw=false, $single=false)
     {
-        if ($key and $raw) return _::filter($this->meta, function($m) use ($key) { return $m->meta_key === $key; });
+        if ($key and $raw and $method = ($single) ? 'find' : 'filter')
+            return _::$method($this->meta, function($m) use ($key) { return $m->meta_key === $key; });
         if (!$key) return $this->load_meta();
         $meta = $this->load_meta();
         return (is_array($meta[$key]) and $single) ? $meta[$key][0] : $meta[$key];

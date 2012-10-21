@@ -7,7 +7,7 @@ if (!class_exists('swpMVCCore')) require_once(dirname(__FILE__).'/../swpmvc.php'
 if (!class_exists('testUtilities')) require_once('testUtilities.php');
 
 
-class InvalidPostControlsRenderer extends swpMVCBaseControlsRenderer
+class InvalidPostControlsRenderer extends swpMVCBaseControlRenderer
 {
     public function weesnaw()
     {
@@ -15,7 +15,7 @@ class InvalidPostControlsRenderer extends swpMVCBaseControlsRenderer
     }
 }
 
-class PostControlsRenderer extends swpMVCBaseControlsRenderer
+class PostControlsRenderer extends swpMVCBaseControlRenderer
 {
     public function weesnaw()
     {
@@ -28,7 +28,7 @@ class PostControlsRenderer extends swpMVCBaseControlsRenderer
     }
 }
 
-class AnotherPostControlsRenderer extends swpMVCBaseControlsRenderer
+class AnotherPostControlsRenderer extends swpMVCBaseControlRenderer
 {
     public function weesnaw()
     {

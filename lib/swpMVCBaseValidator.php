@@ -1,9 +1,6 @@
 <?php
 
-class swpMVCBaseValidator
+class swpMVCBaseValidator extends swpMVCBaseModelExtender
 {
-    public function __construct($validates)
-    {
-        $this->validates = $validates;
-    }
+    public static $type = 'validator';
 }
