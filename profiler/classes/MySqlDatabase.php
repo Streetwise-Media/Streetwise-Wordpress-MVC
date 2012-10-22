@@ -95,6 +95,7 @@ class MySqlDatabase {
 	}
 	
 	function fetch_array($sql) {
+		return array();
 		$rs = mysql_query($sql, $this->conn);
 		$row = mysql_fetch_array($rs, MYSQL_ASSOC);
 		return $row;
