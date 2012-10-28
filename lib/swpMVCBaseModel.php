@@ -52,8 +52,8 @@ class swpMVCBaseModel extends ActiveRecord\Model
         {
             if (!is_callable(array($this->_renderer, $method)) or
                 (!$output->hasSlot($method) and !$output->hasSlot($method.'_block'))) continue;
-            $output = $output->replace($method, $this->_renderer->$method($output));
-            if (!$this->_renderer->$method($output) or $this->needs_template_cleanup($method, $this->_renderer->$method($output)))
+            $output = $output->replace($method, $val = $this->_renderer->$method($output));
+            if (!$val or $this->needs_template_cleanup($method, $val))
                 $output = $output->replace($method.'_block', '');
         }
         return $output;
@@ -205,7 +205,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
         return $this->_form_helper;
     }
     
-    private static function validate_control($prop, $control)
+    public final static function validate_control($prop, $control)
     {
         $class = get_called_class();
         $keys = array('type');
