@@ -107,7 +107,8 @@ class Post extends swpMVCBaseModel
     
     public function thumbnail_url()
     {
-        return ($this->thumbmeta and $this->thumbmeta->thumbnail) ? $this->thumbmeta->thumbnail->guid : '';
+        return (is_array($src_array = wp_get_attachment_image_src($this->thumbmeta->meta_value))) ?
+            $src_array[0] : '';
     }
     
     public static function attach_permalinks(array $posts)
