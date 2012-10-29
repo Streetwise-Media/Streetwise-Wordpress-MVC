@@ -17,7 +17,7 @@ class swFormHelper
     
     public function input($key, $control, $value=false)
     {
-        $value = htmlspecialchars($value);
+        $value = esc_attr($value);
         $type = (isset($control['input_type'])) ? $control['input_type'] : 'text';
         $checked = ($type === 'checkbox' and $value != false) ? 'checked="checked"' : '';
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
@@ -42,7 +42,7 @@ class swFormHelper
     
     public function textarea($key, $control, $value=false)
     {
-        $value = htmlspecialchars($value);
+        $value = esc_attr($value);
         $nid = $this->_prefix.'_'.$key.'_'.$control['type'];
         return "<textarea class='{$this->_prefix} {$this->_prefix}_control {$this->_prefix}_$key' id='$nid'
             name='{$this->_prefix}[$key]'>$value</textarea>";
