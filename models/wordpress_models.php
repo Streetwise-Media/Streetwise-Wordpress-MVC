@@ -93,7 +93,8 @@ class Post extends swpMVCBaseModel
     {
         return array(
             'permalink' => array('render_permalink', array()),
-            'post_thumb_url' => array('thumbnail_url', array())
+            'post_thumb_url' => array('thumbnail_url', array()),
+            'post_image_url' => array('thumbnail_url', array('medium'))
         );
     }
     
@@ -105,9 +106,9 @@ class Post extends swpMVCBaseModel
         );
     }
     
-    public function thumbnail_url()
+    public function thumbnail_url($size='thumbnail')
     {
-        return (is_array($src_array = wp_get_attachment_image_src($this->thumbmeta->meta_value))) ?
+        return (is_array($src_array = wp_get_attachment_image_src($this->thumbmeta->meta_value, $size))) ?
             $src_array[0] : '';
     }
     
