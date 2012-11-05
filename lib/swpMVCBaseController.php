@@ -25,9 +25,11 @@ class swpMVCBaseController
     	return $title;
     }
     
-    public static function cache()
+    public static function cache($key=false)
     {
-        return self::$_cache;
+	if (!$key) return self::$_cache;
+	return array_key_exists($key, self::$_cache)
+	    ? self::$_cache[$key] : false;
     }
     
     public function template($name)

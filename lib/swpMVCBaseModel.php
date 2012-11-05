@@ -47,8 +47,7 @@ class swpMVCBaseModel extends ActiveRecord\Model
     private function use_renderer_to_populate_template(swpMVCStamp $output)
     {
         if (!$this->_renderer) return $output;
-        $methods = get_class_methods($this->_renderer);
-        foreach($methods as $method)
+        foreach($this->_renderer->methods() as $method)
         {
             if (!is_callable(array($this->_renderer, $method)) or
                 (!$output->hasSlot($method) and !$output->hasSlot($method.'_block'))) continue;
