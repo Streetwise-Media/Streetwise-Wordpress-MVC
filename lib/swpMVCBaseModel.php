@@ -188,9 +188,9 @@ class swpMVCBaseModel extends ActiveRecord\Model
         foreach($errors as $key => $error)
         {
             $type = ($this->_controls_renderer and is_callable(array($this->_controls_renderer, $key))
-                     and is_callable(array($this->_controls_renderer->$key(), 'is_valid')) and
-                     $this->_controls_renderer->$key()->is_valid()) ?
-                        $this->_controls_renderer->$key()->type : $controls[$key]['type'];
+                     and is_callable(array($control = $this->_controls_renderer->$key(), 'is_valid')) and
+                     $control->is_valid()) ?
+                        $control->type : $controls[$key]['type'];
             $r[] = array('value' => $key, 'errors' => $error,
                          'control' => $p.'_'.$key.'_'.$type);
         }
