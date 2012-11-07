@@ -265,6 +265,17 @@ class Table
 			$rel->load_eagerly($models, $attrs, $nested_includes, $this);
 		}
 	}
+	
+	public function attach_eagerly($models, $includes)
+	{
+		$valid_models = array();
+		foreach($models as $model)
+			if (is_a($model, 'ActiveRecord\Model')) $valid_models[] = $model;
+		if (empty($includes) or empty($valid_models)) return false;
+		$attrs = array();
+		foreach($valid_models as $model) $attrs[] = $model->attributes();
+		$this->execute_eager_load($valid_models, $attrs, $includes);
+	}
 
 	public function get_column_by_inflected_name($inflected_name)
 	{

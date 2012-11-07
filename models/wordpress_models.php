@@ -128,6 +128,20 @@ class Post extends swpMVCBaseModel
         return $r;
     }
     
+    public static function import_from_wp(array $posts)
+    {
+        $valid_posts = _::filter($posts, function($p){ return is_object($p); });
+        $post_models = array();
+        foreach($valid_posts as $post)
+        {
+            unset($post->filter);
+            $post_model = new Post(get_object_vars($post));
+            $post_model->reset_dirty();
+            $post_models[] = $post_model;
+        }
+        return $post_models;
+    }
+    
 }
 
 class PostMeta extends swpMVCBaseModel

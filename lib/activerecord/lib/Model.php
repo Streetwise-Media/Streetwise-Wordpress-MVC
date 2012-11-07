@@ -1642,6 +1642,11 @@ class Model
 	{
 		return static::table()->find_by_sql($sql, $values, true);
 	}
+        
+        public static function attach_eagerly(array $models, array $includes)
+        {
+            return static::table()->attach_eagerly($models, $includes);
+        }
 
 	/**
 	 * Helper method to run arbitrary queries against the model's database connection.
