@@ -22,7 +22,7 @@ class EagerLoaderTests extends \Enhance\TestFixture
     
     public function test_eager_loading_after_initial_query()
     {
-        define('SW_LOG_QUERIES', true);
+        //define('SW_LOG_QUERIES', true);
         $posts = get_posts();
         foreach($posts as $post)
         {
@@ -35,7 +35,7 @@ class EagerLoaderTests extends \Enhance\TestFixture
     public function test_import_posts_from_wp_to_ar()
     {
         $posts = Post::import_from_wp(get_posts());
-        $this->utility->dump($posts);
+        //$this->utility->dump($posts);
     }
 }
 
