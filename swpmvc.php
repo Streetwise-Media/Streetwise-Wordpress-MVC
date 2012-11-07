@@ -36,6 +36,7 @@ class swpMVCCore
         add_filter('query_vars', array($this, 'add_query_vars'));
         add_filter('rewrite_rules_array', array($this, 'add_rewrite_rules'));
         add_filter('template_include', array($this, 'template_include'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_jswpmvc'));
     }
     
     public function load_dependencies()
@@ -111,6 +112,16 @@ class swpMVCCore
         $c = $wp_query->query_vars['swpmvc_controller'];
         $m = $wp_query->query_vars['swpmvc_method'];
         return (isset($c) and isset($m));
+    }
+    
+    public function enqueue_jswpmvc()
+    {
+        wp_enqueue_script('tiptip',
+            plugins_url('/assets/js/jquery.tipTip.js', __FILE__), array('jquery'));
+        wp_enqueue_script('jswpmvc',
+            plugins_url('/assets/js/jswpMVC.js', __FILE__), array('jquery', 'tiptip'));
+        wp_enqueue_style('tiptip',
+            plugins_url('/assets/css/tipTip.css', __FILE__));
     }
     
     
