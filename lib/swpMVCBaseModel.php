@@ -248,6 +248,11 @@ class swpMVCBaseModel extends ActiveRecord\Model
         $this->flag_dirty('meta_value');
     }
     
+    public function flush_meta()
+    {
+        $this->_meta = false;
+    }
+    
     public function load_meta()
     {  
         if (is_array($this->_meta)) return $this->_meta;
