@@ -986,3 +986,59 @@ json response with descriptive errors ready to be attached to the correct DOM el
 [formErrors](#models/model-formerrors) for more details.
 
 ##jswpMVC
+
+***
+
+swpMVC includes a small javascript library to ease working with programatically generated model controls for processing
+data submission, and showing validation errors
+
+###jswpMVC.getModel(prefix)
+
+This method returns an object created by looping over all form elements generated with the form prefix specific via
+argument. For example, on the controller route using the edit\_post method in the
+[Control Renderer example](/Streetwise-Wordpress-MVC/#model-extenders/controlrenderers),
+for post with id 5, post title 'Title', and post content 'Hello World!', the following would all be true
+
+    var post = jswpMVC.getModel('Post');
+    post.id === 5;
+    post.post_title === 'Title';
+    post.post_content === 'Hello World!';
+    
+###jswpMVC.wrapControls(prefix, class_string)
+
+This method wraps all form controls of a specific prefix in container divs for targeting via jswpMVC.showErrors().
+The prefix argument is required, and class_string is an optional set of additional classes to add to the wrap divs.
+
+###jswpMVC.showErrors(prefix, errors, methods)
+
+This method accepts an array of errors (provided by the
+[$model->formErrors() method)](http://streetwise-media.github.com/Streetwise-Wordpress-MVC/#models/model-formerrors)
+and highlights any elements with errors. If wrapControls has not been called before showErrors, it will be invoked
+automatically.
+
+The default behavior of showErrors is to highlight elements with errors with a 1px red border, and apply the validation
+error message for that model property in a tooltip (courtesy of
+[tiptip](http://code.drewwilson.com/entry/tiptip-jquery-plugin)), clearing both border and tooltip when the control is
+clicked.
+
+These can be overridden by passing an object in as the methods parameter of the following structure:
+
+    {
+        setError: function(error_object, $el){
+            //handle error_object as passed by formErrors() here, using $el which is
+            // closest control wrap div to control element with error
+        },
+        clearError: function($el){
+            //clear error state applied to $el element by setError method
+        }
+    }
+    
+The simplest use is illustrated below, assuming we are posting to the save\_post method in the controller from the
+[Validator example](/Streetwise-Wordpress-MVC/#model-extenders/validators)
+
+    $('#save_post').click(function() {
+        $.post('/route/to/save_post/controller/method', {post: jswpMVC.getModel('Post')}, function(r){
+            var result = $.parseJSON(r);
+            if (result.errors) jswpMVC.showErrors('Post', result.errors);
+        });
+    });
