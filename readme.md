@@ -796,7 +796,7 @@ to the database.
 ***
 
 Renderers are defined similarly to Roles, and function similarly to Views. They are used to define rendering rules for
-model properties when a model is rendererd. Renderers must extend swpMVCBaseRenderer
+model properties when a model is rendered. Renderers must extend swpMVCBaseRenderer
 
 ####Example
 
