@@ -852,8 +852,97 @@ uppercased for no good reason. Also note that because the renderers has\_manners
 has\_manners\_block section is automatically stripped from the template when renderered by a post with this
 renderer attached.
 
-##ControlRenderers
+###ControlRenderers
 
-##Validators
+ControlRenderers define form controls that will be used to interact with a model. It is important that the method names
+match either valid model properties, or properties added by an applied Role, otherwise those methods
+will throw an invalid property exception when attempting to populate the value of their respective controls.
+
+All ControlRenderer methods must return swpMVCModelControl objects.
+
+####swpMVCModelControl
+
+All necessary properties for a model control object can be set via constructor.
+
+    class swpMVCModelControl
+    {
+        public function __construct($type, $label=false, $input_type_or_options=false, $value = false, $multiple=false)
+    }
+ 
+The arguments/properties are detailed as follows:
+
+*   type - This can be input, textarea, or select
+*   label - This is the text that will be put in the label element which replaces your control\_label tag
+    when renderered
+*   input\_type\_or\_options - If the control type is input, this will set the type attribute (such as text or hidden,)
+    and if the control type is select, this should be an array of options, formatted as below:
+    
+    array('Option Text' => 'option_value', 'Second Option Text' => 'second_option_value')
+    
+*   value - This can be used to force a prepopulated value on the rendered control, overriding the value of any
+    corresponding model property
+*   multiple - This is used only for select controls
+
+Control objects with type of select that do not have an array of options set will not be rendered.
+
+
+####Example
+
+    //post_edit.tpl
+    
+    <div>
+        <!-- control_label_post_title --><!-- /control_label_post_title -->
+        <!-- control_post_title --><!-- /control_post_title -->
+        
+        <!-- control_label_post_content --><!-- /control_label_post_content -->
+        <!-- control_post_content --><!-- /control_post_content -->
+        
+        <!-- control_id --><!-- /control_id -->
+    </div>
+
+    class EditPostControlRenderer
+    {
+        public function post_title()
+        {
+            return new swpMVCModelControl('input', 'Title', 'text');
+        }
+        
+        public function post_content()
+        {
+            return new swpMVCModelControl('textarea', 'Content');
+        }
+        
+        public function id()
+        {
+            return new swpMVCModelControl('input', '', 'hidden');
+        }
+    }
+    
+    class  ExamplePostController
+    {
+        public function before()
+        {
+            $this->_templatedir = '/full/path/to/post_edit.tpl/with/trailing/slash/';
+        }
+    
+        public function create_post()
+        {
+            $post = new Post();
+            new EditPostRenderer($post);
+            echo $post->render($this->template('post_edit'));
+        }
+        
+        public function edit_post($id)
+        {
+            $post = Post::first($id);
+            new EditPostRenderer($post);
+            echo $post->render($this->template('post_edit'));
+        }
+    }
+
+In the above example, the create_post and edit_post controller methods render empty and populated forms for working
+with post models respectively.
+
+###Validators
 
 ##jswpMVC
