@@ -847,8 +847,8 @@ $model->render\_{{property\_name}} method.
         }
     }
     
-The view\_obnoxious\_post method in the above example will give us a Craigslist style display, where EVERYTHING IS
-UPPERCASED FOR NO GOOD REASON AT ALL. Also note that because the renderers has\_manners method returns false, the
+The view\_obnoxious\_post method in the above example will give us a Craigslist style display, where everything is
+uppercased for no good reason. Also note that because the renderers has\_manners method returns false, the
 has\_manners\_block section is automatically stripped from the template when renderered by a post with this
 renderer attached.
 
