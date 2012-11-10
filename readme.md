@@ -406,7 +406,7 @@ Views must extend the swpMVCView class
 
 ###$view->render()
 
-This method requires one argument, an instance of [swpMVCView](/Streetwise-Wordpress-MVC/#templates) to be populated,
+This method requires one argument, an instance of [swpMVCStamp](/Streetwise-Wordpress-MVC/#templates) to be populated,
 and returns the template with any template tags matching a method name on the view replaced by the return value of that
 method. The template object will be passed to each method called on the view object, so can be accepted by any view
 method for use in generating a return value.
