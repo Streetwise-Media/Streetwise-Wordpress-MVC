@@ -563,7 +563,215 @@ attached to the model.
 
 ##Controllers
 
+***
+
+With well defined models and model extensions, controllers can be relatively sparse.
+Your controller classes must extend swpMVCBaseController, which equips them with the following functionality.
+
+###$this->page_title
+
+Set this property in your controller method to what you want the title attribute on the generated page to be. This needs to be set
+before you call get\_header().
+
+###$this->_templatedir
+
+Set this property to the directory where your views for the current controller are stored, including a trailing slash.
+Best practice is to define this in the constructor, in which case you'll want to make sure to call the parent constructor as well:
+
+    <?php
+        
+        public function __construct()
+        {
+            $this->_templatedir = dirname(__FILE__).'/../views/';
+            parent::__construct();
+        }
+        
+###$this->_scripts
+
+Set this property to an array where each element is an array of arguments to be passed to
+[wp_enqueue_script](http://codex.wordpress.org/Function_Reference/wp_enqueue_script). Define the property before calling
+get\_header() to have your scripts automatically enqueued on that page.
+
+###$this->_styles
+
+Same as $this->\_scripts, except each element of this array should be an array of arguments for
+[wp_enqueue_style](http://codex.wordpress.org/Function_Reference/wp_enqueue_style).
+
+###$tthis->version
+
+Allows you to set a default version for javascripts and css files added by the controller. Passing in a version parameter when
+defining a script or style array will override this setting.
+
+###$this->_script_localizations
+
+Same as \_styles and \_scripts, except each element of this array should be an array of arguments for
+[wp_localize_script](http://codex.wordpress.org/Function_Reference/wp_localize_script).
+
+###$this->template()
+
+Requires $this->\_templatedir to be defined. Accepts the filename of a template (minus the file extension, which must be .tpl,)
+and returns an [swpMVCStamp](/Streetwise-Wordpress-MVC/#templates) object for population and rendering.
+Here's an example of using the template method to pass a view to a models render method:
+
+    <?php
+        
+        $post = Post::first();
+        $post->render($this->template('show_post'));
+        
+In the above example, we assume that the controllers templatedir property points to a directory that contains a file called
+show_post.tpl, which contains the correct [Stamp tags](/Streetwise-Wordpress-MVC/#templates/stamp-tags)
+to be populated by the Post model.
+
+###$this->set404()
+
+This method generates a WordPress 404 page using the currently selected WordPress theme. It must be called before any output
+is generated. Here's an example of using this method within a controller method:
+
+    <?php
+    
+        public function show_post($slug=false)
+        {
+            if (!$slug) return $this->set404();
+            $post = Post::first(array('conditions' => array('post_name = ?', $slug)));
+            if (!$post) return $this->set404();
+            get_header();
+            $post->render($this->template('show_post'));
+            get_footer();
+        }
+        
+In this method, if no slug was passed to the controller method, we return a 404. If a slug was passed, we attempt to find a post
+using the provided slug. If we cannot, we return a 404. Only at that point if we have found a post using the provided slug do we
+begin to generate output from the controller method.
+
+###$this->isPost()
+
+Returns true if the request method is POST, false otherwise.
+
+###$this->noindex()
+
+Adds a noindex nofollow tag to the header. Must be called before get\_header()
+
+###$this->nocache
+
+Adds Cache-Control headers to prevent page from being cached. Must be called before any output is sent.
+
+###self::link()
+
+This method accepts three arguments, a controller class name, a method name, and an optional array of parameters. It will then
+return the corresponding url for that controller method. For example, if I've defined the following
+[route](/Streetwise-Wordpress-MVC/#router/adding-routes) in my plugin:
+    
+    <?php
+    
+        $route = array('controller' => 'ControllerClass',
+                            'method' => 'ControllerMethod',
+                            'route' => '/url/of/route/:p/:p'
+                        );
+                        
+Then the below statement would be true:
+
+    <?php
+    
+        ControllerClass::link(
+                    'ControllerClass',
+                    'ControllerMethod', 
+                    array('arg1', 'arg2')
+                ) === get_bloginfo('url').'/url/of/route/arg1/arg2';
+                
+The link method is preferable to hard coding any fragment of a url into your views or controllers,
+since this will automatically update any references if you change the route definitions for your plugin.
+
+###$this->logError()
+
+This method accepts a string as a parameter, and will write that string as an E\_USER\_WARNING level error to your PHP log,
+as well as an error notice to the [pQp Console](/Streetwise-Wordpress-MVC/#logging-utility/php-quick-profiler) if you are running
+in the development environment.
+
+###public function before()
+
+This method will run before any controller method is executed.
+
+###public function after()
+
+This method will run after any controller method is executed
+
+###protected static $_cache
+
+Set this variable on your controller class to stash queried data for accessing via other parts of your codebase. For example to
+access a post queried from your controller method from a sidebar widget without setting a global variable or running a second
+query, in your controller use:
+
+    <?php
+    
+        $post = Post::first();
+        self::$_cache['post'] = $post;
+
+And then in your widget code you can use the following:
+
+    <?php
+    
+        $cache = ControllerClass::cache();
+        $post = $cache['post'];
+        
+Note you must use the static cache() method to retrieve the value. This prevents outside sources from polluting the data
+cached by your controller.
+
 ##Roles
+
+***
+
+Roles allow you to extend your models at runtime with additional getters, setters, and general purpose methods for
+business logic specific to a particular context. Roles must extend swpMVCBaseRole.
+
+###Example
+
+Note in the Role definition the model to which the Role is assigned is referred to as $this->model. Also note that any
+properties added by a Role will not be acknowledged by the underlying ActiveRecord model, and therefore not persisted
+to the database.
+
+    class UserSignupRole extends swpMVCBaseRole
+    {
+        private $_authorized;
+        
+        public function set_authorized($value)
+        {
+            $this->_authorized = $value;
+        }
+        
+        public function get_authorized()
+        {
+            return $this->_authorized;
+        }
+        
+        public function send_welcome()
+        {
+            wp_mail($this->model->user_email, 'Welcome to the site!', 'Hey this is the welcome email.');
+        }
+    }
+    
+    class ExampleUserController
+    {
+        //This way will not work because we have not assigned a role
+        public function confirm_account_bad($id)
+        {
+            $user = User::first($id);
+            if (!$user) return $this->set404();
+            $user->authorized = true; // throws an invalid property exception
+            if ($user->authorized) //throws an invalid property exception
+                $user->send_welcome(); //throws an invalid method exception
+        }
+        
+        //Same code as above, works after we've assigned the role
+        public function confirm_account($id)
+        {
+            $user = User::first($id);
+            if (!$user) return $this->set404();
+            new UserSignupRole($user); //this makes the rest of the method work
+            $user->authorized = true;
+            if ($user->authorized)
+                $user->send_welcome();
+        }
+    }
 
 ##Renderers
 
