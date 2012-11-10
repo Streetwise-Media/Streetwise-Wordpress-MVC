@@ -1,3 +1,4 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 #swpMVC
 
 swpMVC is a lightweight MVC framework built to bring some of the experience of other
