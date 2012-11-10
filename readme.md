@@ -1,6 +1,6 @@
 <style>
     code{
-        width:900px;
+        width:920px;
     }
 </style>
 
@@ -952,5 +952,37 @@ with post models respectively.
 ###Validators
 
 ***
+
+Validators are used to organize and compose validation logic for models at runtime. all methods on an applied validator
+are run during ActiveRecord model validation. For more details on this, see
+[phpactiverecord.org documentation on validation](http://www.phpactiverecord.org/projects/main/wiki/Validations)
+
+Note again in definition the model is accessible via $this->model
+
+####Example
+
+    class LongPostValidator
+    {
+        public function content_minimum_length()
+        {
+            if (strlen($this->model->post_content) < 1000)
+                $this->model->errors->add('post_content', 'must be a minimum of 1000 characters');
+        }
+    }
+    
+    class ExamplePostController
+    {
+        public function save_post()
+        {
+            $post = new Post($_POST['post']);
+            new LongPostValidator($post);
+            if (!$post->save())
+                die(json_encode(array('errors' => $post->formErrors())));
+        }
+    }
+    
+In the above example, submitting a post with content less than 1000 characters in length would not save, and return a
+json response with descriptive errors ready to be attached to the correct DOM elements. See
+[formErrors](#models/model-formerrors) for more details.
 
 ##jswpMVC
