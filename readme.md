@@ -716,14 +716,30 @@ And then in your widget code you can use the following:
 Note you must use the static cache() method to retrieve the value. This prevents outside sources from polluting the data
 cached by your controller.
 
-##Roles
+##Model Extenders
 
-***
+There are four types of model extenders that allow you attach functionality to models at runtime, each defined in detail
+below. All three types share common means of injection.
+
+###Injecting an extender
+
+To inject a model extender into a single model, simply pass the model to the extender constructor as follows:
+
+    new ModelExtender($model);
+    
+###Batch injecting extenders
+
+To inject a type of model extender into an array of models, pass the array of models to the static method batch\_inject
+
+    $posts = Post::all(array('limit' => 10));
+    PostExtender::batch_inject($posts); //all 10 posts now have a PostExtender assigned to them
+
+###Roles
 
 Roles allow you to extend your models at runtime with additional getters, setters, and general purpose methods for
 business logic specific to a particular context. Roles must extend swpMVCBaseRole.
 
-###Example
+####Example
 
 Note in the Role definition the model to which the Role is assigned is referred to as $this->model. Also note that any
 properties added by a Role will not be acknowledged by the underlying ActiveRecord model, and therefore not persisted
@@ -773,7 +789,66 @@ to the database.
         }
     }
 
-##Renderers
+###Renderers
+
+***
+
+Renderers are defined similarly to Roles, and function similarly to Views. They are used to define rendering rules for
+model properties when a model is rendererd. Renderers must extend swpMVCBaseRenderer
+
+####Example
+
+In the below example, all methods in the renderer will be used to replace corresponding template tags when the template
+is passed to $model->render(); Note that again, the model is available as $this->model in the renderer definition, and
+also that the renderer methods will take precedence over any corresponding model property or
+$model->render\_{{property\_name}} method.
+
+    class ObnoxiousPostRenderer extends swpMVCBaseRenderer
+    {
+        public function post_title()
+        {
+            return strtoupper($this->model->post_title);
+        }
+        
+        public function has_manners()
+        {
+            return false;
+        }
+        
+        public function post_content()
+        {
+            return wpautop(strtoupper($this->model->post_content));
+        }
+    }
+    
+    //template post_view.tpl
+    <div class="post">
+        <h3><!-- post_title --><!-- /post_title --></h3>
+        <!-- post_content --><!-- /post_content -->
+        <!-- has_manners_block -->
+            <p>This post was written by someone who has an inside voice.</p>
+        <!-- /has_manners_block -->
+    </div>
+    
+    class ExamplePostController extends swpMVCBaseController
+    {
+        public function before()
+        {
+            $this->_templatedir = '/full/path/to/post_view.tpl/with/trailing/slash/';
+        }
+        
+        public function view_obnoxious_post($id)
+        {
+            $post = Post::first($id);
+            new ObnoxiousPostRenderer($post);
+            echo $post->render($this->template('post_view'));
+        }
+    }
+    
+The view\_obnoxious\_post method in the above example will give us a Craigslist style display, where EVERYTHING IS
+UPPERCASED FOR NO GOOD REASON AT ALL. Also note that because the renderers has\_manners method returns false, the
+has\_manners\_block section is automatically stripped from the template when renderered by a post with this
+renderer attached.
 
 ##ControlRenderers
 
