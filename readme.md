@@ -738,6 +738,8 @@ To inject a type of model extender into an array of models, pass the array of mo
 
 ###Roles
 
+***
+
 Roles allow you to extend your models at runtime with additional getters, setters, and general purpose methods for
 business logic specific to a particular context. Roles must extend swpMVCBaseRole.
 
@@ -854,6 +856,8 @@ renderer attached.
 
 ###ControlRenderers
 
+***
+
 ControlRenderers define form controls that will be used to interact with a model. It is important that the method names
 match either valid model properties, or properties added by an applied Role, otherwise those methods
 will throw an invalid property exception when attempting to populate the value of their respective controls.
@@ -944,5 +948,7 @@ In the above example, the create_post and edit_post controller methods render em
 with post models respectively.
 
 ###Validators
+
+***
 
 ##jswpMVC
