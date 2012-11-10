@@ -5,7 +5,7 @@ Plugin Name: Streetwise Media WordPress MVC
 Plugin URI: http://streetwise-media.com
 Description: MVC Framework for Streetwise WordPress development
 Author: Brian Zeligson
-Version: 0.1
+Version: 0.11
 Author URI: http://brianzeligson.com
 License: GPL3 http://www.gnu.org/licenses/gpl.html
 */
