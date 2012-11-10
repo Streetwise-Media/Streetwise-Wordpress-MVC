@@ -209,14 +209,16 @@ properties method on an object, and access the properties from the resulting arr
 
 ###$model->render()
 
-swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp object (see [Views](/Streetwise-Wordpress-MVC/#templates)
-section for details,) and autopopulates the Stamp using the model properties.
+swpMVCBaseModel comes with an instance method 'render,' which accepts as an argument a Stamp template object
+(see [Templates](/Streetwise-Wordpress-MVC/#templates)
+section for details,) and autopopulates the template using the model properties.
 
 ###public function sanitize_render()
 
-This method accepts two parameters, a model property value and the property name, and gives you a chance to sanitize it before it is returned. This
-will be applied any time you directly access a model property. It can be bypassed  in the same was described under
-the [automatic stripslashes section](http://streetwise-media.github.com/Streetwise-Wordpress-MVC/#models/automatic-stripslashes).
+This method accepts two parameters, a model property value and the property name, and gives you a chance to sanitize it
+before it is returned. This will be applied any time you directly access a model property. It can be bypassed in the same
+was described under the
+[automatic stripslashes section](http://streetwise-media.github.com/Streetwise-Wordpress-MVC/#models/automatic-stripslashes).
 
 Here's an example of a sanitize_render definition that will run all model properties except title
 through strip_tags when accessed directly:
@@ -246,23 +248,26 @@ passed to the render method contains a tag called post_name, and your Post model
 the return value of that method will be used to populate the Stamp object in favor of the value of the instance property
 post_name.
 
+###Model::renderForm()
+
+This method can be called statically on a model class to render an empty form for the class properties.
+
+The method accepts three parameters. The first parameter is required and must be a valid Stamp template object to be
+populated, the second is an optional form prefix (defaults to the class name,), and last is an optional
+[ControlRenderer](/Streetwise-Wordpress-MVC/#controlrenderers) which defines the form controls that
+correspond to your model properties.
+
 ###Form prefixes
 
 Each model rendering a form adds a prefix to its form elements. By default when invoked via $model->render(), the form prefix
-will be the class name of the model instance invoking the render method. To override this, set the '\_prefix' property on the  model
-instances form helper before calling render, as follows:
+will be the class name of the model instance invoking the render method. To override this, set the '\_prefix' property on
+the  model instances form helper before calling render, as follows:
 
     <?php
         
         $model->form_helper()->_prefix = 'my_custom_form_prefix';
         $model->render($this->template('template_name'));
         
-###Model::renderForm()
-
-This method can be called statically on a model class to render an empty form for the class properties. The method accepts
-two parameters. The first parameter is required and must be a valid Stamp template object to be populated, the second is
-an optional form prefix (defaults to the class name.)
-
 ###$model->formErrors()
 
 This method can be called on a model instance to return an array of validation errors from an attempt to save an invalid
@@ -365,8 +370,8 @@ Here's an example that will unserialize meta when the key is equal to 'serialize
         
 ###public function dehydrate_meta
 
-This method serves the opposite purpose of hydrate_meta, and will be invoked on any values assigned to the 'meta_value' property
-of a meta object. For a class with dehydrate_meta defined as follows:
+This method serves the opposite purpose of hydrate_meta, and will be invoked on any values assigned to the 'meta_value'
+property of a meta object. For a class with dehydrate_meta defined as follows:
 
     <?php
     
@@ -386,7 +391,169 @@ Calling the below on a model instance of the class would make the following bool
 
 ##Views
 
+***
+
+Views allow you to group together and define methods that will populate template tags which match those method names.
+Properties can be set on views to be accessed from within view methods, and \_\_get() and \_\_set() are utilized in
+the base class to prevent memory consumption that results from assigning undeclared properties to an object instance.
+Views must extend the swpMVCView class
+
+###$view->render()
+
+This method requires one argument, an instance of [swpMVCView](/Streetwise-Wordpress-MVC/#templates) to be populated,
+and returns the template with any template tags matching a method name on the view replaced by the return value of that
+method. The template object will be passed to each method called on the view object, so can be accepted by any view
+method for use in generating a return value.
+
+###Example
+    
+    //view class
+
+    class ExampleView extends swpMVCView
+    {
+        public function header()
+        {
+            return $this->header
+        }
+        
+        public function post_listing(swpMVCStamp $output) //this will be the template object passed to $view->render
+        {
+            $r = '';
+            foreach($this->posts as $post)
+                $r .= $post->render(clone $output->copy('post_listing'));
+            return $r;
+        }
+    }
+    
+    //template file example.tpl
+    
+    <div>
+        <h2><!-- header --><!-- /header --></h2>
+        <!-- post_listing -->
+            <div class="post-item">
+                <h4><!-- post_title --><!-- /post_title --></h4>
+            </div>
+        <!-- /post_listing -->
+    </div>
+    
+    //controller class
+    
+    class ExampleController extends swpMVCBaseController
+    {
+        public function before()
+        {
+            $this->_templatedir = '/full/path/to/example.tpl/with/trailing/slash/';
+        }
+    
+        public function example_method()
+        {
+            $posts = Post::all(array('limit' => 10));
+            $view = new ExampleView();
+            $view->header = 'Example Post Listing'
+            $view->posts = $posts;
+            echo $view->render($this->template('example'));
+        }
+    }
+    
+In the above example, ExampleController::example_method would output Example Post Listing in the h2 at the top of
+example.tpl, and then 10 divs of class post-item with the post title of each in their respective h4 tag.
+
 ##Templates
+
+***
+
+swpMVC Templates are based off of an older version of [Gabor DeMooij's Stamp library,](https://github.com/gabordemooij/stamp/blob/StampEngine/Stamp.php)
+using extremely simple principles. Your templates will contain no logic at all, and in most cases will be completely valid
+HTML on their own.
+
+###Stamp tags
+
+Stamp tags take the form of html comments, with an opening and closing comment representing one replaceable block.
+For example:
+
+    <a href="<!-- url --><!-- /url -->">Link to somewhere</a>
+    
+gives you a region labeled url that can be manipulated through a stamp object.
+
+###$stamp->replace()
+
+If you place the above template code in a file called template.tpl, and call the below code from your controller:
+
+    <?php
+        
+        echo $this->template('template')->replace('url', 'http://www.somesite.com');
+        
+the result would be:
+
+    <a href="http://www.somesite.com">Link to somewhere</a>
+    
+###$stamp->copy()
+
+This method allows you to copy defined template regions. Given the below template in file template.tpl:
+
+    <p>Here's some stuff</p>
+    <!-- more_stuff -->
+        <p>And here's some more stuff</p>
+    <!-- /more_stuff -->
+    
+The below code would yield true at the boolean in the last statement:
+
+    <?php
+    
+        $more_stuff = $this->template('template')->copy('more_stuff');
+        $more_stuff === "<p>And here's some more stuff</p>";
+
+
+This is useful when populating one template with multiple models. For example, given the below template in file post.tpl:
+
+    <h1><!-- post_title --><!-- /post_title --></h1>
+    <!-- author_data -->
+        by <!-- display_name --><!-- /display_name -->
+    <!-- /author_data -->
+    
+The below controller code would replace post_title with the title of the post object, and display_name with the display name
+of the post author:
+
+    <?php
+        
+        $post = Post::first(array('include' => 'user');
+        echo $post->render($this->template('post'))
+            ->replace('author_data',
+                $post->user->render(
+                    $this->template('post')->copy('author_data')
+                )
+            );
+    
+###Populating templates with $model->render()
+
+When using the [$model->render()](/Streetwise-Wordpress-MVC/#models/model-render) method, your model will automatically
+replace tags named according to the following conventions:
+
+    <!-- attribute_name --><!-- /attribute_name -->
+
+The above gets replaced with a model property named attribute\_name, or the return value of model instance method
+    render\_attribute\_name if such method exists.
+    
+    <!-- attribute_name_block -->
+        <!-- attribute_name --><!-- /attribute_name -->
+    <!-- /attribute_name_block -->
+    
+The above gets replaced with a model property named attribute\_name, or the return value of model instance method
+render\_attribute\_name if such method exists. If the value is falsy or returns true when passed through
+$model->needs_template_cleanup(), the entire attribute\_name\_block section is stripped from the template when rendered.
+    
+    <!-- control_attribute_name --><!-- /control_attribute_name -->
+
+The above gets replaced with a rendered [form control](/Streetwise-Wordpress-MVC/#controlrenderers/swpmvcmodelcontrol)
+object returned by the 'attribute\_name' method of any [ControlRenderer](/Streetwise-Wordpress-MVC/#controlrenderers)
+attached to the model.
+    
+    <!-- control_label_attribute_name --><!-- /control_label_attribute_name -->
+
+The above gets replaced with the label property of the [form control](/Streetwise-Wordpress-MVC/#controlrenderers/swpmvcmodelcontrol)
+object returned by the 'attribute\_name' method of any [ControlRenderer](/Streetwise-Wordpress-MVC/#controlrenderers)
+attached to the model.
+
 
 ##Controllers
 
