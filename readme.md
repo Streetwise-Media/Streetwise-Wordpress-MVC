@@ -718,6 +718,8 @@ cached by your controller.
 
 ##Model Extenders
 
+***
+
 There are four types of model extenders that allow you attach functionality to models at runtime, each defined in detail
 below. All three types share common means of injection.
 
