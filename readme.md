@@ -858,9 +858,7 @@ renderer attached.
 
 ***
 
-ControlRenderers define form controls that will be used to interact with a model. It is important that the method names
-match either valid model properties, or properties added by an applied Role, otherwise those methods
-will throw an invalid property exception when attempting to populate the value of their respective controls.
+ControlRenderers define form controls that will be used to interact with a model.
 
 All ControlRenderer methods must return swpMVCModelControl objects.
 
@@ -881,10 +879,14 @@ The arguments/properties are detailed as follows:
 *   input\_type\_or\_options - If the control type is input, this will set the type attribute (such as text or hidden,)
     and if the control type is select, this should be an array of options, formatted as below:
     
+    
     array('Option Text' => 'option_value', 'Second Option Text' => 'second_option_value')
     
+    
 *   value - This can be used to force a prepopulated value on the rendered control, overriding the value of any
-    corresponding model property
+    corresponding model property. Note if this is falsy and the corresponding model doesn't have a property
+    matching the ControlRenderer method name returning this model control object, directly or via role, an
+    exception will be thrown
 *   multiple - This is used only for select controls
 
 Control objects with type of select that do not have an array of options set will not be rendered.
