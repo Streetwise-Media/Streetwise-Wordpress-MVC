@@ -994,7 +994,7 @@ data submission, and showing validation errors
 
 ###jswpMVC.getModel(prefix)
 
-This method returns an object created by looping over all form elements generated with the form prefix specific via
+This method returns an object created by looping over all form elements generated with the form prefix specified via
 argument. For example, on the controller route using the edit\_post method in the
 [Control Renderer example](/Streetwise-Wordpress-MVC/#model-extenders/controlrenderers),
 for post with id 5, post title 'Title', and post content 'Hello World!', the following would all be true
