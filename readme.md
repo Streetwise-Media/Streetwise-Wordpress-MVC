@@ -1,3 +1,9 @@
+<style>
+    code{
+        width:900px;
+    }
+</style>
+
 #swpMVC
 
 swpMVC is a lightweight MVC framework built to bring some of the experience of other
