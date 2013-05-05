@@ -109,9 +109,8 @@ class swpMVCCore
     public function is_swpmvc_request()
     {
         global $wp_query;
-        $c = $wp_query->query_vars['swpmvc_controller'];
-        $m = $wp_query->query_vars['swpmvc_method'];
-        return (isset($c) and isset($m));
+
+        return (array_key_exists('swpmvc_controller', $wp_query->query_vars) and array_key_exists('swpmvc_method', $wp_query->query_vars));
     }
     
     public function enqueue_jswpmvc()
